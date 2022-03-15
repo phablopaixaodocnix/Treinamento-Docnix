@@ -8,5 +8,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="C:/Users/mjdio/Documents/estagio/c3p0-0.9.5.4.jar"/>
 	<classpathentry kind="lib" path="C:/Users/mjdio/Documents/estagio/mysql-connector-java-8.0.17.jar"/>
+	<classpathentry kind="lib" path="C:/Users/mjdio/Documents/estagio/mchange-commons-java-0.2.16.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
