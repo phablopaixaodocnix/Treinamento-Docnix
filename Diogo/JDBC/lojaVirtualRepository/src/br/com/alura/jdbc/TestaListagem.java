@@ -1,4 +1,4 @@
-package lojaVirtualRepository;
+package br.com.alura.jdbc;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,9 +10,9 @@ public class TestaListagem {
 	public static void main(String[] args) throws SQLException {
 		
 		ConnectionFactory connectionFactory = new ConnectionFactory();
-		Connection conection = connectionFactory.recuperarConexao();
+		Connection connection = connectionFactory.recuperarConexao();
         
-		PreparedStatement stm = conection.prepareStatement("select id, nome, descricao from produto");
+		PreparedStatement stm = connection.prepareStatement("select id, nome, descricao from produto");
 		stm.execute();
 		
 		ResultSet rst = stm.getResultSet();
@@ -28,7 +28,7 @@ public class TestaListagem {
 			System.out.println(" - " + descricao);
 		}
 		
-		conection.close();
+		connection.close();
 
 	}
 
