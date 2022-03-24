@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../../../../../Facul/POO/ListaHeranca/ListaHeranca.iml" filepath="$PROJECT_DIR$/../../../../../Facul/POO/ListaHeranca/ListaHeranca.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../bytebank-encapsulado/bytebank-encapsulado.iml" filepath="$PROJECT_DIR$/../bytebank-encapsulado/bytebank-encapsulado.iml" />
+    </modules>
+  </component>
+</project>
