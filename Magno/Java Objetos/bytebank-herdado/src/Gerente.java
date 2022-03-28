@@ -1,21 +1,46 @@
-public class Gerente extends Funcionario{
+public class Gerente extends Funcionario implements SistemaInterno{
     private int senha;
 
-    public Gerente(int senha) {
-        this.senha = senha;
+    public Gerente() {;
     }
 
-    public boolean autenticaSenha(int senha){
-        if (this.senha == senha){
+
+    public boolean autentica(int senha){
+        if(this.senha==senha){
+            System.out.println("Senha correta");
             return true;
-        }
-        else{
+        } else {
+            System.out.println("Senha incorreta");
             return false;
         }
+    }
+
+    public int getSenha() {
+        return senha;
+    }
+
+    public void setSenha(int senha) {
+        this.senha = senha;
     }
 
     @Override
     public double bonificacao() {
         return super.bonificacao() + super.getSalario();
+    }
+
+    @Override
+    public boolean autentica(Gerente g) {
+        {
+            boolean autenticou = g.autentica(this.senha);
+            if (autenticou){
+                System.out.println("Autenticou");
+                return true;
+            }
+            else{
+                System.out.println("Não autenticou");
+                return false;
+            }
+        }
+
     }
 }
