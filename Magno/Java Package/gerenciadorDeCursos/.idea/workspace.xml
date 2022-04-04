@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="7f887db4-4b8a-41b5-8f73-d4ab1adf820c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../bytebank-herdado-conta/bytebank-herdado-conta.iml" beforeDir="false" afterPath="$PROJECT_DIR$/../bytebank-herdado-conta/doc/bytebank-herdado-conta.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bytebank-herdado-conta/src/modelo/Cliente.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bytebank-herdado-conta/src/modelo/Conta.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bytebank-herdado-conta/src/modelo/ContaCorrente.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bytebank-herdado-conta/src/modelo/ContaPoupanca.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bytebank-herdado-conta/src/modelo/Tributavel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bytebank-herdado-conta/src/modelo/calculadorDeImposto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../bytebank-herdado-conta/src/teste/TesteContas.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="274R8JNOHg6mrkR04isNO2GEWdU" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Java Collections/gerenciadorDeCursos/gerenciador-de-cursos.iml" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+  </component>
+  <component name="RunManager" selected="Application.TestaListaDeAula">
+    <configuration name="TestaListaDeAula" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="br.com.alura.TestaListaDeAula" />
+      <module name="gerenciador-de-cursos" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="br.com.alura.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestandoListas" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="br.com.alura.TestandoListas" />
+      <module name="gerenciador-de-cursos" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="br.com.alura.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestandoListas2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="br.com.alura.TestandoListas2" />
+      <module name="gerenciador-de-cursos" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="br.com.alura.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.TestaListaDeAula" />
+        <item itemvalue="Application.TestandoListas" />
+        <item itemvalue="Application.TestandoListas2" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7f887db4-4b8a-41b5-8f73-d4ab1adf820c" name="Changes" comment="" />
+      <created>1648577212689</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1648577212689</updated>
+      <workItem from="1648577214039" duration="2675000" />
+      <workItem from="1648601645909" duration="48000" />
+      <workItem from="1648642730154" duration="51000" />
+      <workItem from="1648642814059" duration="431000" />
+      <workItem from="1648643276828" duration="45000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
