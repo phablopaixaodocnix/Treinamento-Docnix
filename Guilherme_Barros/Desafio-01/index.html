@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Links -->
+
+    <link rel="stylesheet" href="style.css">
+
+    <title>Desafio_01</title>
+</head>
+
+<body>
+    <!-- Formulário -->
+    <header class="titulo">Formulário de Cadastro</header>
+    <div class="container">
+        <form id="form-cadastro">
+            <!-- Dados Principais -->
+            <input type="text" placeholder="Digite seu Nome *" id="nomePrincipal">
+            <span class="texto-validacao" id="validacao-nome">Campo Obrigatório</span>
+            <input type="text" placeholder="Digite seu E-mail *" id="emailPrincipal">
+            <span class="texto-validacao" id="validacao-email"></span>
+            <input type="text" placeholder="Digite seu CPF *" id="cpfPrincipal">
+            <span class="texto-validacao" id="validacao-cpf"></span>
+
+            <!-- Endereço -->
+            <p>Endereço:</p>
+            <input type="text" placeholder="CEP">
+            <input type="text" placeholder="Rua">
+            <input type="text" placeholder="Cidade/Estado">
+
+            <!-- Formação -->
+            <div class="select-formacao">
+                <p>Formação:</p>
+                <select>
+                    <option value="Default">Selecione sua Formação</option>
+                    <option value="Fundamental">Ensino Fundamental</option>
+                    <option value="Medio">Ensino Medio</option>
+                    <option value="Superior">Ensino Superior</option>
+                </select>
+            </div>
+
+            <!-- Contatos -->
+            <div>
+                <p>Contato Principal:</p>
+                <input type="text" placeholder="Nome *" id="nomeContatoPrincipal">
+                <span class="texto-validacao" id="validacaoNomeContato">Campo Obrigatório</span>
+                <input type="text" placeholder="E-mail *" id="emailContatoPrincipal">
+                <span class="texto-validacao" id="validacaoEmailContato"></span>
+                <input type="tel" placeholder="Numero de Telefone" id="numeroContatoPrincipal">
+                <span class="texto-validacao" id="validacaoNumeroContato"></span>
+            </div>
+
+            <div id="contatosAlternativos">
+
+            </div>
+
+            <!-- Botões -->
+            <div class="btn">
+                <button class="btnNovoContato" onclick="criarContato()">Adicionar Contato Alternativo</button>
+            </div>
+            <div class="button">
+                <button type="submit" id="buttonSubmit">Enviar</button>
+            </div>
+        </form>
+    </div>
+    <!-- Box Personalizado -->
+    <div class="box">
+        <div class="box-container">
+            <span class="box-lt"></span>
+            <span class="box-rt"></span>
+        </div>
+        <span class="box-name">E-mail</span>
+    </div>
+
+
+    <!-- Script JS -->
+    <script src="script.js"></script>
+</body>
+
+</html>
