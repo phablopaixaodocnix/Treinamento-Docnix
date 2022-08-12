@@ -1,3 +1,10 @@
+// Mascara para campos
+$(document).ready(function () {
+    $('#numeroContatoPrincipal').mask('(00) 00000-0000');
+    $('#cep').mask('00000-000')
+    $('#cpfPrincipal').mask('000.000.000-00')
+});
+
 // Validar Numero
 var validarNumero = "0123456789"
 let aux = 0
@@ -23,6 +30,16 @@ const Formulario = document.getElementById("form-cadastro")
 // Adicionar Novo Contato
 const btnNovoContato = document.getElementById("btnNovoContato")
 
+
+//Array de Dados
+
+var dadosPrincipais = []
+
+var dadosContatos = []
+
+var ctdID = 0
+
+
 // Submit
 
 Formulario.addEventListener("submit", (e) => {
@@ -33,11 +50,16 @@ Formulario.addEventListener("submit", (e) => {
     var nomePrincipal = document.getElementById('nomePrincipal').value
     var emailPrincipal = document.getElementById("emailPrincipal").value
     var cpfPrincipal = document.getElementById("cpfPrincipal").value
+    var cepPrincipal = document.getElementById("cep").value
+    var ruaPrincipal = document.getElementById("rua").value
+    var estadoPrincipal = document.getElementById("estado").value
+    var select = document.getElementById("select");
 
     //Declarações Contato Principal
     var emailContatoPrincipal = document.getElementById("emailContatoPrincipal").value
     var nomeContatoPrincipal = document.getElementById("nomeContatoPrincipal").value
     var numeroContatoPrincipal = document.getElementById("numeroContatoPrincipal").value
+    
 
 
 
@@ -113,6 +135,14 @@ Formulario.addEventListener("submit", (e) => {
 
     // Função Validar CPF
     let validarCPF = () => {
+
+        //Pegar valor sem mascara
+        if(isNaN(cpfPrincipal)){
+            $("#cpfPrincipal").unmask();
+            cpfPrincipal = document.getElementById("cpfPrincipal").value
+            $('#cpfPrincipal').mask('000.000.000-00')
+        }
+
         let contadorAux = 10
         let calc = 0
 
@@ -120,52 +150,69 @@ Formulario.addEventListener("submit", (e) => {
             validacaoCPF.style.display = "block"
             validacaoCPF.innerHTML = "Campo Obrigatório"
         }
-        else
+        else {
             // Calculando Primeiro Digito Verificador
             for (let i = 0; i < 9; i++) {
                 calc += cpfPrincipal[i] * contadorAux
                 contadorAux--
             }
-        calc = (calc * 10) % 11
-
-        // Se calc for igual a primeiro digito verificador, primeiro digito valido
-        if (calc >= 10) calc = 0
-        if (calc == cpfPrincipal[9]) {
-            //Calculando Segundo Digito Verificador
-            contadorAux = 11
-            calc = 0
-            for (let i = 0; i < 10; i++) {
-                calc += cpfPrincipal[i] * contadorAux
-                contadorAux--
-            }
             calc = (calc * 10) % 11
 
-            if (calc == cpfPrincipal[10]) {
-                validacaoCPF.style.display = "none"
+            // Se calc for igual a primeiro digito verificador, primeiro digito valido
+            if (calc >= 10) calc = 0
+            if (calc == cpfPrincipal[9]) {
+                //Calculando Segundo Digito Verificador
+                contadorAux = 11
+                calc = 0
+                for (let i = 0; i < 10; i++) {
+                    calc += cpfPrincipal[i] * contadorAux
+                    contadorAux--
+                }
+                calc = (calc * 10) % 11
+
+                if (calc == cpfPrincipal[10]) {
+                    validacaoCPF.style.display = "none"
+                }
+                else {
+                    validacaoCPF.style.display = "block"
+                    validacaoCPF.innerHTML = "CPF Incorreto"
+                }
             }
             else {
                 validacaoCPF.style.display = "block"
+
                 validacaoCPF.innerHTML = "CPF Incorreto"
             }
         }
-        else {
-            validacaoCPF.style.display = "block"
-            validacaoCPF.innerHTML = "CPF Incorreto"
-        }
     }
 
-    // Função Validar Numero
+    // Função Validar Numeros
 
-    let validarNumero = ()=>{
-        if(numeroContatoPrincipal == ""){
+    let validarNumeros = () => {
+        if (numeroContatoPrincipal == "") {
             validacaoNumeroContato.style.display = "block"
             validacaoNumeroContato.innerHTML = "Campo Obrigatório"
         }
-        else{
+        else {
             validacaoNumeroContato.style.display = "none"
         }
     }
 
+    // Função Gravar Dados no Objeto
+    let gravarDadosP = () => {
+        let arrayInformacoesP = {}
+
+        arrayInformacoesP.id = ctdID
+        arrayInformacoesP.nome = nomePrincipal
+        arrayInformacoesP.email = emailPrincipal
+        arrayInformacoesP.cep = cepPrincipal
+        arrayInformacoesP.rua = ruaPrincipal
+        arrayInformacoesP.estado = estadoPrincipal
+        arrayInformacoesP.formacao = select.options[select.selectedIndex].value;
+        return arrayInformacoesP
+    }
+    
+    dadosPrincipais.push(gravarDadosP())
 
     // Funções Globais
 
@@ -179,11 +226,12 @@ Formulario.addEventListener("submit", (e) => {
     let validacaoContatoPrincipal = () => {
         validarNome()
         validarEmail()
-        validarNumero()
+        validarNumeros()
     }
 
     validacaoDadosPrincipais()
     validacaoContatoPrincipal()
+    ctdID++
 
 })
 
@@ -222,10 +270,6 @@ let criarContato = () => {
 
 }
 
-// Mascara para campos
 
-$(document).ready(function () {
-    $('#numeroContatoPrincipal').mask('(00) 00000-0000');
-    $('#maskCep').mask('00000-00')
-    $('#cpfPrincipal').mask('000.000.000-00')
-});
+
+

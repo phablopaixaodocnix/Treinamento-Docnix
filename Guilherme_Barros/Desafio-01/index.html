@@ -28,14 +28,14 @@
 
             <!-- Endereço -->
             <p>Endereço:</p>
-            <input type="text" placeholder="CEP" id="maskCep">
-            <input type="text" placeholder="Rua">
-            <input type="text" placeholder="Cidade/Estado">
+            <input type="text" placeholder="CEP" id="cep">
+            <input type="text" placeholder="Rua" id="rua">
+            <input type="text" placeholder="Cidade/Estado" id="estado">
 
             <!-- Formação -->
             <div class="select-formacao">
                 <p>Formação:</p>
-                <select>
+                <select id="select">
                     <option value="Default">Selecione sua Formação</option>
                     <option value="Fundamental">Ensino Fundamental</option>
                     <option value="Medio">Ensino Medio</option>
@@ -61,10 +61,17 @@
                 <button class="btnNovoContato" onclick="criarContato()">Adicionar Contato Alternativo</button>
             </div>
             <div class="button">
-                <button type="submit" id="buttonSubmit">Enviar</button>
+                <button type="submit" id="buttonSubmit">Salvar</button>
             </div>
         </form>
+    
     </div>
+
+
+    <!-- Tabela -->
+
+
+    
 
 
 

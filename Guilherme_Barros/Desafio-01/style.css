@@ -14,9 +14,6 @@ body{
 
 /* Header */
 .titulo{
-/* display: flex;
-align-items: center;
-justify-content: center; */
 text-align: center;
 padding-top: 30px;
 width: 100vw;
