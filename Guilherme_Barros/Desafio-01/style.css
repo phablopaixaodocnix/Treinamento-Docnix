@@ -6,18 +6,26 @@
 
 body{
     background: linear-gradient(90deg, rgb(1, 1, 49) 0%, rgb(29, 29, 66) 50%, rgb(52, 52, 80) 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
 
 /* Header */
 .titulo{
-display: flex;
+/* display: flex;
 align-items: center;
-justify-content: center;
+justify-content: center; */
+text-align: center;
+padding-top: 30px;
+width: 100vw;
 height: 100px;
 color:white;
 background: linear-gradient(90deg, rgb(1, 1, 37) 0%, rgb(22, 22, 49)50%, rgb(38, 38, 58)100%);
 font-size: 30px;
 font-weight: bold;
+margin-bottom: 50px;
 }
 
 /* Formulário */
@@ -31,7 +39,6 @@ input{
     text-align: center;
     border: none;
     color: white;
-    overflow: hidden;
 }
 input:hover{
     border: 2px solid rgb(62, 6, 114);
@@ -42,15 +49,15 @@ input:nth-child(n+1):nth-child(-n+6):hover{
 }
 
 .container{
-    margin-top: 50px;
+
+
     display: flex;
     justify-content: center;
     align-items: center;
-    position:absolute;
-    margin: 100px 0;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+
+
+
+
     background: rgba(0, 0, 0, 0.281);
     width: 400px;
     border-radius: 10px;
