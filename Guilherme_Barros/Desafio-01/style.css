@@ -110,6 +110,39 @@ span{
     color: white;
 }
 
+/* Tabela */
+
+#table-form{
+    width: 50vw;
+    margin-top: 50px;
+}
+.table-title{
+    color: white;
+    text-align: center;
+}
+#novaLinhaTR{
+    color: white;
+}
+
+#buttonEditar{
+    background-color: blueviolet;
+    color: white;
+    width: 100%;
+    border-radius: 5px; 
+    cursor: pointer; 
+}
+#buttonExcluir{
+    background-color: red;
+    color: white; 
+    width: 100%;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.buttonAttribute{
+    width: 50px;
+    border-radius: 5px;
+}
+
 /* Botões */
 .button{
     display: flex;

@@ -59,9 +59,11 @@ Formulario.addEventListener("submit", (e) => {
     var emailContatoPrincipal = document.getElementById("emailContatoPrincipal").value
     var nomeContatoPrincipal = document.getElementById("nomeContatoPrincipal").value
     var numeroContatoPrincipal = document.getElementById("numeroContatoPrincipal").value
-    
 
 
+    // Declaração Tabela
+
+    var tableForm = document.getElementById("table-form")
 
 
     // Função Validar Nome
@@ -137,7 +139,7 @@ Formulario.addEventListener("submit", (e) => {
     let validarCPF = () => {
 
         //Pegar valor sem mascara
-        if(isNaN(cpfPrincipal)){
+        if (isNaN(cpfPrincipal)) {
             $("#cpfPrincipal").unmask();
             cpfPrincipal = document.getElementById("cpfPrincipal").value
             $('#cpfPrincipal').mask('000.000.000-00')
@@ -211,8 +213,54 @@ Formulario.addEventListener("submit", (e) => {
         arrayInformacoesP.formacao = select.options[select.selectedIndex].value;
         return arrayInformacoesP
     }
-    
+
     dadosPrincipais.push(gravarDadosP())
+
+    // Função Gravar dados na Tabela
+
+    let gravarTabela = () => {
+        var novaLinha = document.createElement('tr')
+        novaLinha.setAttribute("id", "novaLinhaTR")
+        tableForm.appendChild(novaLinha)
+        for (let i = 0; i < dadosPrincipais.length; i++) {
+
+            // ID
+            var acrescentarDadoID = document.createElement('td')
+            acrescentarDadoID.innerHTML = dadosPrincipais[i].id
+            // Nome
+            var acrescentarDadoNome = document.createElement('td')
+            acrescentarDadoNome.innerHTML = dadosPrincipais[i].nome
+            // E-mail
+            var acrescentarDadoEmail = document.createElement('td')
+            acrescentarDadoEmail.innerHTML = dadosPrincipais[i].email
+
+
+            // Editar
+
+            var acrescentarButtonEditar = document.createElement('td')
+            acrescentarButtonEditar.setAttribute('class', 'buttonAttribute')
+            var editar = document.createElement('button')
+            editar.setAttribute('id', 'buttonEditar')
+            editar.innerHTML = 'Editar'
+
+            // Excluir
+            var acrescentarButtonExcluir = document.createElement('td')
+            acrescentarButtonExcluir.setAttribute('class', 'buttonAttribute')
+            var excluir = document.createElement('button')
+            excluir.setAttribute('id', 'buttonExcluir')
+            excluir.innerHTML = 'Excluir'
+        }
+        novaLinha.appendChild(acrescentarDadoID)
+        novaLinha.appendChild(acrescentarDadoNome)
+        novaLinha.appendChild(acrescentarDadoEmail)
+        novaLinha.appendChild(acrescentarButtonEditar)
+        acrescentarButtonEditar.appendChild(editar)
+        novaLinha.appendChild(acrescentarButtonExcluir)
+        acrescentarButtonExcluir.appendChild(excluir)
+    }
+
+    gravarTabela()
+
 
     // Funções Globais
 
@@ -242,7 +290,7 @@ Formulario.addEventListener("submit", (e) => {
 let criarContato = () => {
 
     // Titulo
-    let novoContatoTitulo = document.createElement('p')
+    var novoContatoTitulo = document.createElement('p')
     novoContatoTitulo.innerHTML = "Contato Alternativo " + contadorContatos
     contatosAlternativos.appendChild(novoContatoTitulo)
     contadorContatos++
