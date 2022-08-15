@@ -1,3 +1,10 @@
+// Tabela
+
+var tableForm = document.getElementById("table-form")
+let contadorButtonExcluir = 0
+const buttonsExcluir = document.getElementsByClassName('buttonExcluirLinha')
+
+
 // Mascara para campos
 $(document).ready(function () {
     $('#numeroContatoPrincipal').mask('(00) 00000-0000');
@@ -61,9 +68,7 @@ Formulario.addEventListener("submit", (e) => {
     var numeroContatoPrincipal = document.getElementById("numeroContatoPrincipal").value
 
 
-    // Declaração Tabela
 
-    var tableForm = document.getElementById("table-form")
 
 
     // Função Validar Nome
@@ -216,50 +221,7 @@ Formulario.addEventListener("submit", (e) => {
 
     dadosPrincipais.push(gravarDadosP())
 
-    // Função Gravar dados na Tabela
 
-    let gravarTabela = () => {
-        var novaLinha = document.createElement('tr')
-        novaLinha.setAttribute("id", "novaLinhaTR")
-        tableForm.appendChild(novaLinha)
-        for (let i = 0; i < dadosPrincipais.length; i++) {
-
-            // ID
-            var acrescentarDadoID = document.createElement('td')
-            acrescentarDadoID.innerHTML = dadosPrincipais[i].id
-            // Nome
-            var acrescentarDadoNome = document.createElement('td')
-            acrescentarDadoNome.innerHTML = dadosPrincipais[i].nome
-            // E-mail
-            var acrescentarDadoEmail = document.createElement('td')
-            acrescentarDadoEmail.innerHTML = dadosPrincipais[i].email
-
-
-            // Editar
-
-            var acrescentarButtonEditar = document.createElement('td')
-            acrescentarButtonEditar.setAttribute('class', 'buttonAttribute')
-            var editar = document.createElement('button')
-            editar.setAttribute('id', 'buttonEditar')
-            editar.innerHTML = 'Editar'
-
-            // Excluir
-            var acrescentarButtonExcluir = document.createElement('td')
-            acrescentarButtonExcluir.setAttribute('class', 'buttonAttribute')
-            var excluir = document.createElement('button')
-            excluir.setAttribute('id', 'buttonExcluir')
-            excluir.innerHTML = 'Excluir'
-        }
-        novaLinha.appendChild(acrescentarDadoID)
-        novaLinha.appendChild(acrescentarDadoNome)
-        novaLinha.appendChild(acrescentarDadoEmail)
-        novaLinha.appendChild(acrescentarButtonEditar)
-        acrescentarButtonEditar.appendChild(editar)
-        novaLinha.appendChild(acrescentarButtonExcluir)
-        acrescentarButtonExcluir.appendChild(excluir)
-    }
-
-    gravarTabela()
 
 
     // Funções Globais
@@ -279,12 +241,66 @@ Formulario.addEventListener("submit", (e) => {
 
     validacaoDadosPrincipais()
     validacaoContatoPrincipal()
+    gravarTabela()
     ctdID++
 
 })
 
+// Função Gravar dados na Tabela
+let gravarTabela = () => {
+    var novaLinha = document.createElement('tr')
+    novaLinha.setAttribute("id", "novaLinhaTR")
+    tableForm.appendChild(novaLinha)
+    for (let i = 0; i < dadosPrincipais.length; i++) {
+
+        // ID
+        var acrescentarDadoID = document.createElement('td')
+        acrescentarDadoID.innerHTML = dadosPrincipais[i].id
+        // Nome
+        var acrescentarDadoNome = document.createElement('td')
+        acrescentarDadoNome.innerHTML = dadosPrincipais[i].nome
+        // E-mail
+        var acrescentarDadoEmail = document.createElement('td')
+        acrescentarDadoEmail.innerHTML = dadosPrincipais[i].email
 
 
+        // Editar
+
+        var acrescentarButtonEditar = document.createElement('td')
+        acrescentarButtonEditar.setAttribute('class', 'tdAttribute')
+        var editar = document.createElement('button')
+        editar.setAttribute('id', 'buttonEditar')
+        editar.innerHTML = 'Editar'
+
+        // Excluir
+        var acrescentarButtonExcluir = document.createElement('td')
+        acrescentarButtonExcluir.setAttribute('class', 'tdAttribute')
+        var excluir = document.createElement('button')
+        excluir.setAttribute('id', 'buttonExcluir')
+        excluir.setAttribute('data-index', contadorButtonExcluir)
+        excluir.setAttribute('class', 'buttonExcluirLinha')
+        excluir.setAttribute('onclick', 'excluirLinha()')
+        excluir.innerHTML = 'Excluir'
+
+    }
+    novaLinha.appendChild(acrescentarDadoID)
+    novaLinha.appendChild(acrescentarDadoNome)
+    novaLinha.appendChild(acrescentarDadoEmail)
+    novaLinha.appendChild(acrescentarButtonEditar)
+    acrescentarButtonEditar.appendChild(editar)
+    novaLinha.appendChild(acrescentarButtonExcluir)
+    acrescentarButtonExcluir.appendChild(excluir)
+    contadorButtonExcluir++
+}
+
+// Função Excluir Linha
+
+let excluirLinha = () => {
+    $("button.buttonExcluirLinha").click(function () {
+        dadosPrincipais.splice($(this).attr("data-index"), 1)
+        $(this).parent().parent().remove();
+    });
+}
 
 // Função Criar Contato Alternativo
 let criarContato = () => {

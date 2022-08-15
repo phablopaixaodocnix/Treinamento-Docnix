@@ -115,6 +115,7 @@ span{
 #table-form{
     width: 50vw;
     margin-top: 50px;
+    text-align: center;
 }
 .table-title{
     color: white;
@@ -138,7 +139,7 @@ span{
     border-radius: 5px;
     cursor: pointer;
 }
-.buttonAttribute{
+.tdAttribute{
     width: 50px;
     border-radius: 5px;
 }
