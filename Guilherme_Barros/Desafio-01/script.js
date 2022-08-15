@@ -296,7 +296,7 @@ let gravarTabela = () => {
 // Função Excluir Linha
 
 let excluirLinha = () => {
-    $("button.buttonExcluirLinha").click(function () {
+    $(document).on( 'click', '.buttonExcluirLinha', function () { 
         dadosPrincipais.splice($(this).attr("data-index"), 1)
         $(this).parent().parent().remove();
     });
