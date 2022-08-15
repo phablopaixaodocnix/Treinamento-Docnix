@@ -1,3 +1,20 @@
+// Declarações Dados Principais
+let nome = document.getElementById('nomePrincipal')
+let email = document.getElementById("emailPrincipal")
+let cpf = document.getElementById("cpfPrincipal")
+let cep = document.getElementById("cep")
+let rua = document.getElementById("rua")
+let estado = document.getElementById("estado")
+let select = document.getElementById("select")
+
+let idAux;
+
+
+//Declarações Contato Principal
+let emailContato = document.getElementById("emailContatoPrincipal")
+let nomeContato = document.getElementById("nomeContatoPrincipal")
+let numeroContato = document.getElementById("numeroContatoPrincipal")
+
 // Tabela
 
 var tableForm = document.getElementById("table-form")
@@ -53,24 +70,19 @@ var ctdID = 0
 Formulario.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    // Declarações Dados Principais
 
-    var nomePrincipal = document.getElementById('nomePrincipal').value
-    var emailPrincipal = document.getElementById("emailPrincipal").value
-    var cpfPrincipal = document.getElementById("cpfPrincipal").value
-    var cepPrincipal = document.getElementById("cep").value
-    var ruaPrincipal = document.getElementById("rua").value
-    var estadoPrincipal = document.getElementById("estado").value
-    var select = document.getElementById("select");
+    // Declarações Dados Principais
+    let nomePrincipal = document.getElementById('nomePrincipal').value
+    let emailPrincipal = document.getElementById("emailPrincipal").value
+    let cpfPrincipal = document.getElementById("cpfPrincipal").value
+    let cepPrincipal = document.getElementById("cep").value
+    let ruaPrincipal = document.getElementById("rua").value
+    let estadoPrincipal = document.getElementById("estado").value
 
     //Declarações Contato Principal
-    var emailContatoPrincipal = document.getElementById("emailContatoPrincipal").value
-    var nomeContatoPrincipal = document.getElementById("nomeContatoPrincipal").value
-    var numeroContatoPrincipal = document.getElementById("numeroContatoPrincipal").value
-
-
-
-
+    let emailContatoPrincipal = document.getElementById("emailContatoPrincipal").value
+    let nomeContatoPrincipal = document.getElementById("nomeContatoPrincipal").value
+    let numeroContatoPrincipal = document.getElementById("numeroContatoPrincipal").value
 
     // Função Validar Nome
     let validarNome = () => {
@@ -212,6 +224,7 @@ Formulario.addEventListener("submit", (e) => {
 
         arrayInformacoesP.id = ctdID
         arrayInformacoesP.nome = nomePrincipal
+        arrayInformacoesP.cpf = cpfPrincipal
         arrayInformacoesP.email = emailPrincipal
         arrayInformacoesP.cep = cepPrincipal
         arrayInformacoesP.rua = ruaPrincipal
@@ -220,13 +233,20 @@ Formulario.addEventListener("submit", (e) => {
         dadosPrincipais.push(arrayInformacoesP)
     }
 
+    // Gravar Dados Alterados
+
+    let AlterarTabelaEArray = ()=>{
+        console.log(idAux)
+    }
+    AlterarTabelaEArray()
+
     gravarDadosP()
 
-    // Gravar Dados Contatos
+    // Função Gravar Dados Contatos
 
     let gravarDadosC = () => {
         let arrayInformacoesC = {}
-        for(let i = 0; i < divIndex.length ; i++){
+        for (let i = 0; i < divIndex.length; i++) {
             arrayInformacoesC.idDadosPrincipais = ctdID
             arrayInformacoesC.idContato = i
             arrayInformacoesC.nome = divIndex[i].children[1].value
@@ -238,7 +258,6 @@ Formulario.addEventListener("submit", (e) => {
     }
     gravarDadosC()
 
-    
     // Funções Globais
 
     let validacaoDadosPrincipais = () => {
@@ -255,14 +274,36 @@ Formulario.addEventListener("submit", (e) => {
     }
     validacaoDadosPrincipais()
     validacaoContatoPrincipal()
-    if (validacaoNome.style.display == 'none' && validacaoEmail.style.display == 'none'
-        && validacaoCPF.style.display == 'none' && validacaoEmailContato.style.display == 'none'
-        && validacaoNomeContato.style.display == 'none' && validacaoNumeroContato.style.display == 'none') {
-        gravarTabela()
-        ctdID++
-    }
+    // if (validacaoNome.style.display == 'none' && validacaoEmail.style.display == 'none'
+    //     && validacaoCPF.style.display == 'none' && validacaoEmailContato.style.display == 'none'
+    //     && validacaoNomeContato.style.display == 'none' && validacaoNumeroContato.style.display == 'none') {
+    gravarTabela()
+    ctdID++
+    // }
+    console.log(dadosPrincipais)
 
 })
+
+// Função Alterar
+
+let editarLinha = () => {
+    $(document).on('click', '.buttonEditarLinha', function () {
+        let index = $(this).attr("data-index")
+
+        // Colocar Dados da Tabela no Input
+        nome.value = dadosPrincipais[index].nome
+        email.value = dadosPrincipais[index].email
+        cpf.value = dadosPrincipais[index].cpf
+        cep.value = dadosPrincipais[index].cep
+        rua.value = dadosPrincipais[index].rua
+        estado.value = dadosPrincipais[index].estado
+        select.value = dadosPrincipais[index].formacao
+        idAux = dadosPrincipais[index].id
+
+
+    });
+}
+
 
 // Função Gravar dados na Tabela
 let gravarTabela = () => {
@@ -288,6 +329,9 @@ let gravarTabela = () => {
         acrescentarButtonEditar.setAttribute('class', 'tdAttribute')
         var editar = document.createElement('button')
         editar.setAttribute('id', 'buttonEditar')
+        editar.setAttribute('class', 'buttonEditarLinha')
+        editar.setAttribute('onclick', 'editarLinha()')
+        editar.setAttribute('data-index', contadorButtonExcluir)
         editar.innerHTML = 'Editar'
 
         // Excluir
