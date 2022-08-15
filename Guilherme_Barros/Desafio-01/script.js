@@ -238,11 +238,14 @@ Formulario.addEventListener("submit", (e) => {
         validarEmail()
         validarNumeros()
     }
-
     validacaoDadosPrincipais()
     validacaoContatoPrincipal()
-    gravarTabela()
-    ctdID++
+    if(validacaoNome.style.display == 'none' && validacaoEmail.style.display == 'none'
+    && validacaoCPF.style.display == 'none' && validacaoEmailContato.style.display == 'none'
+    && validacaoNomeContato.style.display == 'none' && validacaoNumeroContato.style.display == 'none'){
+       gravarTabela()
+       ctdID++
+   }
 
 })
 
