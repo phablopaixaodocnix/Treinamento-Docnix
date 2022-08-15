@@ -18,8 +18,9 @@ let aux = 0
 
 //Contatos
 
-var contatosAlternativos = document.getElementById("contatosAlternativos")
+var divIndex = document.getElementsByClassName("divIndex")
 var contadorContatos = 0
+
 
 // Mensagem de Validação
 
@@ -216,14 +217,28 @@ Formulario.addEventListener("submit", (e) => {
         arrayInformacoesP.rua = ruaPrincipal
         arrayInformacoesP.estado = estadoPrincipal
         arrayInformacoesP.formacao = select.options[select.selectedIndex].value;
-        return arrayInformacoesP
+        dadosPrincipais.push(arrayInformacoesP)
     }
 
-    dadosPrincipais.push(gravarDadosP())
+    gravarDadosP()
 
+    // Gravar Dados Contatos
 
+    let gravarDadosC = () => {
+        let arrayInformacoesC = {}
+        for(let i = 0; i < divIndex.length ; i++){
+            arrayInformacoesC.idDadosPrincipais = ctdID
+            arrayInformacoesC.idContato = i
+            arrayInformacoesC.nome = divIndex[i].children[1].value
+            arrayInformacoesC.email = divIndex[i].children[2].value
+            arrayInformacoesC.numero = divIndex[i].children[3].value
+            dadosContatos.push(arrayInformacoesC)
+            arrayInformacoesC = {}
+        }
+    }
+    gravarDadosC()
 
-
+    
     // Funções Globais
 
     let validacaoDadosPrincipais = () => {
@@ -240,12 +255,12 @@ Formulario.addEventListener("submit", (e) => {
     }
     validacaoDadosPrincipais()
     validacaoContatoPrincipal()
-    if(validacaoNome.style.display == 'none' && validacaoEmail.style.display == 'none'
-    && validacaoCPF.style.display == 'none' && validacaoEmailContato.style.display == 'none'
-    && validacaoNomeContato.style.display == 'none' && validacaoNumeroContato.style.display == 'none'){
-       gravarTabela()
-       ctdID++
-   }
+    if (validacaoNome.style.display == 'none' && validacaoEmail.style.display == 'none'
+        && validacaoCPF.style.display == 'none' && validacaoEmailContato.style.display == 'none'
+        && validacaoNomeContato.style.display == 'none' && validacaoNumeroContato.style.display == 'none') {
+        gravarTabela()
+        ctdID++
+    }
 
 })
 
@@ -299,7 +314,7 @@ let gravarTabela = () => {
 // Função Excluir Linha
 
 let excluirLinha = () => {
-    $(document).on( 'click', '.buttonExcluirLinha', function () { 
+    $(document).on('click', '.buttonExcluirLinha', function () {
         dadosPrincipais.splice($(this).attr("data-index"), 1)
         $(this).parent().parent().remove();
     });
@@ -308,10 +323,16 @@ let excluirLinha = () => {
 // Função Criar Contato Alternativo
 let criarContato = () => {
 
+
+    // Criar DIV
+    let novaDiv = document.createElement('div')
+    novaDiv.setAttribute("class", "divIndex")
+    contatosAlternativos.appendChild(novaDiv)
+
     // Titulo
-    var novoContatoTitulo = document.createElement('p')
+    let novoContatoTitulo = document.createElement('p')
     novoContatoTitulo.innerHTML = "Contato Alternativo " + contadorContatos
-    contatosAlternativos.appendChild(novoContatoTitulo)
+    novaDiv.appendChild(novoContatoTitulo)
     contadorContatos++
 
     //Input Nome
@@ -319,24 +340,23 @@ let criarContato = () => {
     let novoContatoNome = document.createElement('input')
     novoContatoNome.setAttribute("type", "text")
     novoContatoNome.setAttribute("placeholder", "Nome")
-    contatosAlternativos.appendChild(novoContatoNome)
+    novoContatoNome.setAttribute("data-name", "Nome")
+    novaDiv.appendChild(novoContatoNome)
 
     // Input E-mail
 
     let novoContatoEmail = document.createElement('input')
     novoContatoEmail.setAttribute("type", "text")
     novoContatoEmail.setAttribute("placeholder", "Email")
-    contatosAlternativos.appendChild(novoContatoEmail)
+    novoContatoEmail.setAttribute("data-name", "Email")
+    novaDiv.appendChild(novoContatoEmail)
 
     // Input Numero
 
     let novoContatoNumero = document.createElement('input')
     novoContatoNumero.setAttribute("type", "text")
     novoContatoNumero.setAttribute("placeholder", "Numero de Telefone")
-    contatosAlternativos.appendChild(novoContatoNumero)
+    novoContatoNumero.setAttribute("data-name", "Numero")
+    novaDiv.appendChild(novoContatoNumero)
 
 }
-
-
-
-
