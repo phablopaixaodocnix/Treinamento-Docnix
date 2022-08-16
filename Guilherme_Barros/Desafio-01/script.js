@@ -277,7 +277,7 @@ Formulario.addEventListener("submit", (e) => {
     // Função Gravar Dados Contatos
 
     let gravarDadosC = () => {
-        if (valorBtnContato == 0) {
+        if (valorBtnContato === 0) {
             alert("Mínimo de 2 Contatos")
         }
         else {
@@ -301,6 +301,14 @@ Formulario.addEventListener("submit", (e) => {
     }
 
 
+    if (
+        validacaoNome.style.display == 'none' && validacaoEmail.style.display == 'none'
+        && validacaoCPF.style.display == 'none' && validacaoEmailContato.style.display == 'none'
+        && validacaoNomeContato.style.display == 'none' && validacaoNumeroContato.style.display == 'none' &&
+        auxAlterar == 0 && valorBtnContato != 0) {
+        gravarDadosP()
+        gravarTabela()
+    }
     // Chamada de Funções
 
     let validacaoDadosPrincipais = () => {
@@ -315,19 +323,11 @@ Formulario.addEventListener("submit", (e) => {
         validarEmail()
         validarNumeros()
     }
+    gravarDadosC()
     validacaoDadosPrincipais()
     validacaoContatoPrincipal()
     AlterarTabelaEArray()
 
-    if (
-        validacaoNome.style.display == 'none' && validacaoEmail.style.display == 'none'
-        && validacaoCPF.style.display == 'none' && validacaoEmailContato.style.display == 'none'
-        && validacaoNomeContato.style.display == 'none' && validacaoNumeroContato.style.display == 'none' &&
-        auxAlterar == 0 && valorBtnContato != 0) {
-        gravarDadosP()
-        gravarDadosC()
-        gravarTabela()
-    }
 
     auxAlterar = 0
     btnNovoContato[0].style.display = "flex"
@@ -436,6 +436,7 @@ let excluirLinha = () => {
             buttonsEditar[i].setAttribute("data-index", i)
         }
         contadorBotaoEditar = buttonsEditar.length
+        limparCampos()
     });
 }
 
