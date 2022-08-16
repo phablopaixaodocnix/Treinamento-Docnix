@@ -7,9 +7,11 @@ let rua = document.getElementById("rua")
 let estado = document.getElementById("estado")
 let select = document.getElementById("select")
 
+let contadorBotaoEditar = 0;
 let idAux;
 let valorBtnContato = 0;
 let indexAux;
+let index = 0;
 
 //Declarações Contato Principal
 let emailContato = document.getElementById("emailContatoPrincipal")
@@ -26,6 +28,7 @@ var dadoNome = document.getElementsByClassName("acrescentarDadoNome")
 var dadoEmail = document.getElementsByClassName("acrescentarDadoEmail")
 let contadorButtonExcluir = 0
 const buttonsExcluir = document.getElementsByClassName('buttonExcluirLinha')
+const buttonsEditar = document.getElementsByClassName('buttonEditarLinha')
 let auxAlterar = 0
 
 
@@ -335,7 +338,7 @@ Formulario.addEventListener("submit", (e) => {
 
 let editarLinha = () => {
     $(document).on('click', '.buttonEditarLinha', function () {
-        let index = $(this).attr("data-index")
+        index = $(this).attr("data-index")
 
         // Colocar Dados da Tabela no Input
         nome.value = dadosPrincipais[index].nome
@@ -374,7 +377,6 @@ let gravarTabela = () => {
     novaLinha.setAttribute("id", "novaLinhaTR")
     tableForm.appendChild(novaLinha)
     for (let i = 0; i < dadosPrincipais.length; i++) {
-
         // ID
         var acrescentarDadoID = document.createElement('td')
         acrescentarDadoID.setAttribute('class', 'acrescentarDadoID')
@@ -397,7 +399,7 @@ let gravarTabela = () => {
         editar.setAttribute('id', 'buttonEditar')
         editar.setAttribute('class', 'buttonEditarLinha')
         editar.setAttribute('onclick', 'editarLinha()')
-        editar.setAttribute('data-index', contadorButtonExcluir)
+        editar.setAttribute('data-index', contadorBotaoEditar)
         editar.innerHTML = 'Editar'
 
         // Excluir
@@ -419,6 +421,7 @@ let gravarTabela = () => {
     novaLinha.appendChild(acrescentarButtonExcluir)
     acrescentarButtonExcluir.appendChild(excluir)
     contadorButtonExcluir++
+    contadorBotaoEditar++
     ctdID++
     limparCampos()
 }
@@ -428,9 +431,11 @@ let gravarTabela = () => {
 let excluirLinha = () => {
     $(document).on('click', '.buttonExcluirLinha', function () {
         dadosPrincipais.splice($(this).attr("data-index"), 1)
-
-        dadosContatos.splice($(this).attr("data-index"), 1)
         $(this).parent().parent().remove();
+        for (let i = 0; i < buttonsEditar.length; i++) {
+            buttonsEditar[i].setAttribute("data-index", i)
+        }
+        contadorBotaoEditar = buttonsEditar.length
     });
 }
 
