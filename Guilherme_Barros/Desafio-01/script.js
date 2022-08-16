@@ -274,6 +274,10 @@ Formulario.addEventListener("submit", (e) => {
         }
     }
 
+    // Função Validar Contato Alternativos
+
+
+
     // Função Gravar Dados Contatos
 
     let gravarDadosC = () => {
@@ -459,7 +463,8 @@ let criarContato = () => {
 
     let novoContatoNome = document.createElement('input')
     novoContatoNome.setAttribute("type", "text")
-    novoContatoNome.setAttribute("placeholder", "Nome")
+    novoContatoNome.setAttribute("required", '')
+    novoContatoNome.setAttribute("placeholder", "Nome *")
     novoContatoNome.setAttribute("data-name", "Nome")
     novaDiv.appendChild(novoContatoNome)
 
@@ -467,7 +472,8 @@ let criarContato = () => {
 
     let novoContatoEmail = document.createElement('input')
     novoContatoEmail.setAttribute("type", "text")
-    novoContatoEmail.setAttribute("placeholder", "Email")
+    novoContatoEmail.setAttribute("required", '')
+    novoContatoEmail.setAttribute("placeholder", "Email *")
     novoContatoEmail.setAttribute("data-name", "Email")
     novaDiv.appendChild(novoContatoEmail)
 
@@ -475,7 +481,8 @@ let criarContato = () => {
 
     let novoContatoNumero = document.createElement('input')
     novoContatoNumero.setAttribute("type", "text")
-    novoContatoNumero.setAttribute("placeholder", "Numero de Telefone")
+    novoContatoNumero.setAttribute("required",'')
+    novoContatoNumero.setAttribute("placeholder", "Numero de Telefone *")
     novoContatoNumero.setAttribute("data-name", "Numero")
     novaDiv.appendChild(novoContatoNumero)
     valorBtnContato++
