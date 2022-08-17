@@ -274,16 +274,11 @@ Formulario.addEventListener("submit", (e) => {
     // Função Gravar Dados Alterados
     let AlterarTabelaEArray = () => {
         if (auxAlterar == 1) {
-            // for (let j = 0; j < divIndex.length;) {
-            //     for (let i = 0; i < dadosContatos.length; i++) {
-            //         if (idAux == dadosContatos[i].idDadosPrincipais) {
-            //             dadosContatos[i].nome = divIndex[j].children[1].value
-            //             dadosContatos[i].email = divIndex[j].children[2].value
-            //             dadosContatos[i].numero = divIndex[j].children[3].value
-            //             j++
-            //         }
-            //     }
-            // }
+            for (let i = 0; i < dadosPrincipais[idAux].contatos.length; i++) {
+                dadosPrincipais[idAux].contatos[i].nome = divIndex[i].children[1].value
+                dadosPrincipais[idAux].contatos[i].email = divIndex[i].children[2].value
+                dadosPrincipais[idAux].contatos[i].numero = divIndex[i].children[3].value
+            }
             for (let i = 0; i < dadosPrincipais.length; i++) {
                 if (idAux == dadosPrincipais[i].id) {
                     dadosPrincipais[idAux].idFixo = idAux
@@ -353,6 +348,13 @@ let editarLinha = () => {
         nomeContatoPrincipal.value = dadosPrincipais[index].nomeContato
         numeroContatoPrincipal.value = dadosPrincipais[index].numeroContato
         idAux = index
+
+        for (let i = 0; i < dadosPrincipais[index].contatos.length; i++) {
+            divIndex[i].children[1].value = dadosPrincipais[index].contatos[i].nome
+            divIndex[i].children[2].value = dadosPrincipais[index].contatos[i].email
+            divIndex[i].children[3].value = dadosPrincipais[index].contatos[i].numero
+        }
+
         auxAlterar = 1
     });
     btnNovoContato[0].style.display = "none"
@@ -423,14 +425,13 @@ let excluirLinha = () => {
             buttonsEditar[i].setAttribute("data-index", i)
         }
         contadorBotaoEditar = buttonsEditar.length
-        for(let i = 0; i < dadosPrincipais.length; i++){
+        for (let i = 0; i < dadosPrincipais.length; i++) {
             dadosPrincipais[i].id = i
             dadoID[i].innerHTML = dadosPrincipais[i].id
         }
         ctdAuxId = dadosPrincipais.length
-        console.log(dadosPrincipais)
-        limparCampos()
     });
+    limparCampos()
 }
 
 // Função Criar Contato Alternativo
