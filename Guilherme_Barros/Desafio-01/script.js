@@ -1,22 +1,23 @@
 // Declarações Dados Principais
-let nome = document.getElementById('nomePrincipal')
-let email = document.getElementById("emailPrincipal")
-let cpf = document.getElementById("cpfPrincipal")
-let cep = document.getElementById("cep")
-let rua = document.getElementById("rua")
-let estado = document.getElementById("estado")
+let nomePrincipal = document.getElementById('nomePrincipal')
+let emailPrincipal = document.getElementById("emailPrincipal")
+let cpfPrincipal = document.getElementById("cpfPrincipal")
+let cepPrincipal = document.getElementById("cep")
+let ruaPrincipal = document.getElementById("rua")
+let estadoPrincipal = document.getElementById("estado")
+let emailContatoPrincipal = document.getElementById("emailContatoPrincipal")
+let nomeContatoPrincipal = document.getElementById("nomeContatoPrincipal")
+let numeroContatoPrincipal = document.getElementById("numeroContatoPrincipal")
 let select = document.getElementById("select")
+
 
 let contadorBotaoEditar = 0;
 let idAux;
 let valorBtnContato = 0;
 let indexAux;
 let index = 0;
+let ctdAuxId = 0
 
-//Declarações Contato Principal
-let emailContato = document.getElementById("emailContatoPrincipal")
-let nomeContato = document.getElementById("nomeContatoPrincipal")
-let numeroContato = document.getElementById("numeroContatoPrincipal")
 
 
 
@@ -81,27 +82,22 @@ var ctdID = 0
 Formulario.addEventListener("submit", (e) => {
     e.preventDefault();
 
-
     // Declarações Dados Principais
-    
-    let nomePrincipal = document.getElementById('nomePrincipal').value
-
-    // let emailPrincipal = document.getElementById("emailPrincipal").value
-    let cpfPrincipal = document.getElementById("cpfPrincipal").value
-    let cepPrincipal = document.getElementById("cep").value
-    let ruaPrincipal = document.getElementById("rua").value
-    let estadoPrincipal = document.getElementById("estado").value
-
-    //Declarações Contato Principal
-    let emailContatoPrincipal = document.getElementById("emailContatoPrincipal").value
-    let nomeContatoPrincipal = document.getElementById("nomeContatoPrincipal").value
-    let numeroContatoPrincipal = document.getElementById("numeroContatoPrincipal").value
+    let nome = nomePrincipal.value
+    let email = emailPrincipal.value
+    let cpf = cpfPrincipal.value
+    let cep = cepPrincipal.value
+    let rua = ruaPrincipal.value
+    let estado = estadoPrincipal.value
+    let emailContato = emailContatoPrincipal.value
+    let nomeContato = nomeContatoPrincipal.value
+    let numeroContato = numeroContatoPrincipal.value
 
     // Função Validar Nome
     let validarNome = () => {
 
         // Dados Principais (Nome)
-        if (nomePrincipal == "") {
+        if (nome == "") {
 
             validacaoNome.style.display = "block"
 
@@ -113,7 +109,7 @@ Formulario.addEventListener("submit", (e) => {
 
         // Contato Principal (Nome)
 
-        if (nomeContatoPrincipal == "") {
+        if (nomeContato == "") {
 
             validacaoNomeContato.style.display = "block"
 
@@ -129,15 +125,15 @@ Formulario.addEventListener("submit", (e) => {
 
 
         // Dados Principais (E-mail)
-        if (emailPrincipal == "") {
+        if (email == "") {
             validacaoEmail.style.display = "block"
             validacaoEmail.innerHTML = "Campo Obrigatório"
         }
         else {
             validacaoEmail.style.display = "none"
-            if (emailPrincipal.includes('@') && emailPrincipal.includes('.com')) {
-                while (emailPrincipal.indexOf('@') > emailPrincipal.indexOf('.com')) {
-                    emailPrincipal = emailPrincipal.replace(".com", "test")
+            if (email.includes('@') && email.includes('.com')) {
+                while (email.indexOf('@') > email.indexOf('.com')) {
+                    email = email.replace(".com", "test")
                 }
             }
             else {
@@ -148,15 +144,15 @@ Formulario.addEventListener("submit", (e) => {
 
         //Contato Principal (E-mail)
 
-        if (emailContatoPrincipal == "") {
+        if (emailContato == "") {
             validacaoEmailContato.style.display = "block"
             validacaoEmailContato.innerHTML = "Campo Obrigatório"
         }
         else {
             validacaoEmailContato.style.display = "none"
-            if (emailContatoPrincipal.includes('@') && emailContatoPrincipal.includes('.com')) {
-                while (emailContatoPrincipal.indexOf('@') > emailContatoPrincipal.indexOf('.com')) {
-                    emailContatoPrincipal = emailContatoPrincipal.replace(".com", "test")
+            if (emailContato.includes('@') && emailContato.includes('.com')) {
+                while (emailContato.indexOf('@') > emailContato.indexOf('.com')) {
+                    emailContato = emailContato.replace(".com", "test")
                 }
             }
             else {
@@ -170,40 +166,40 @@ Formulario.addEventListener("submit", (e) => {
     let validarCPF = () => {
 
         //Pegar valor sem mascara
-        if (isNaN(cpfPrincipal)) {
+        if (isNaN(cpf)) {
             $("#cpfPrincipal").unmask();
-            cpfPrincipal = document.getElementById("cpfPrincipal").value
+            cpf = document.getElementById("cpfPrincipal").value
             $('#cpfPrincipal').mask('000.000.000-00')
         }
 
         let contadorAux = 10
         let calc = 0
 
-        if (cpfPrincipal == "") {
+        if (cpf == "") {
             validacaoCPF.style.display = "block"
             validacaoCPF.innerHTML = "Campo Obrigatório"
         }
         else {
             // Calculando Primeiro Digito Verificador
             for (let i = 0; i < 9; i++) {
-                calc += cpfPrincipal[i] * contadorAux
+                calc += cpf[i] * contadorAux
                 contadorAux--
             }
             calc = (calc * 10) % 11
 
             // Se calc for igual a primeiro digito verificador, primeiro digito valido
             if (calc >= 10) calc = 0
-            if (calc == cpfPrincipal[9]) {
+            if (calc == cpf[9]) {
                 //Calculando Segundo Digito Verificador
                 contadorAux = 11
                 calc = 0
                 for (let i = 0; i < 10; i++) {
-                    calc += cpfPrincipal[i] * contadorAux
+                    calc += cpf[i] * contadorAux
                     contadorAux--
                 }
                 calc = (calc * 10) % 11
 
-                if (calc == cpfPrincipal[10]) {
+                if (calc == cpf[10]) {
                     validacaoCPF.style.display = "none"
                 }
                 else {
@@ -222,7 +218,7 @@ Formulario.addEventListener("submit", (e) => {
     // Função Validar Numeros
 
     let validarNumeros = () => {
-        if (numeroContatoPrincipal == "") {
+        if (numeroContato == "") {
             validacaoNumeroContato.style.display = "block"
             validacaoNumeroContato.innerHTML = "Campo Obrigatório"
         }
@@ -233,7 +229,7 @@ Formulario.addEventListener("submit", (e) => {
 
     // Função Gravar Dados
     let gravarDados = () => {
-        if (auxAlterar == 0) {
+        if (auxAlterar === 0) {
             if (valorBtnContato === 0) {
                 alert("Mínimo de 2 Contatos")
             }
@@ -244,17 +240,18 @@ Formulario.addEventListener("submit", (e) => {
                 let contatoInformacoesDinamicas = []
                 let objetoInformacoesDinamicas = {}
 
-                contatoInformacoesPrincipais.id = ctdID
-                contatoInformacoesPrincipais.nome = nomePrincipal
-                contatoInformacoesPrincipais.cpf = cpfPrincipal
-                contatoInformacoesPrincipais.email = emailPrincipal
-                contatoInformacoesPrincipais.cep = cepPrincipal
-                contatoInformacoesPrincipais.rua = ruaPrincipal
-                contatoInformacoesPrincipais.estado = estadoPrincipal
+                contatoInformacoesPrincipais.id = ctdAuxId
+                contatoInformacoesPrincipais.idFixo = ctdID
+                contatoInformacoesPrincipais.nome = nome
+                contatoInformacoesPrincipais.cpf = cpf
+                contatoInformacoesPrincipais.email = email
+                contatoInformacoesPrincipais.cep = cep
+                contatoInformacoesPrincipais.rua = rua
+                contatoInformacoesPrincipais.estado = estado
                 contatoInformacoesPrincipais.formacao = select.options[select.selectedIndex].value;
-                contatoInformacoesPrincipais.nomeContatoP = nomeContatoPrincipal
-                contatoInformacoesPrincipais.emailContatoP = emailContatoPrincipal
-                contatoInformacoesPrincipais.numeroContatoP = numeroContatoPrincipal
+                contatoInformacoesPrincipais.nomeContato = nomeContato
+                contatoInformacoesPrincipais.emailContato = emailContato
+                contatoInformacoesPrincipais.numeroContato = numeroContato
 
                 for (let i = 0; i < divIndex.length; i++) {
                     objetoInformacoesDinamicas.idContato = contadorContatos - 1
@@ -268,32 +265,35 @@ Formulario.addEventListener("submit", (e) => {
                 contatoInformacoesPrincipais.contatos = contatoInformacoesDinamicas
                 dadosPrincipais.push(contatoInformacoesPrincipais)
                 ctdID++
+                ctdAuxId++
             }
+            console.log(dadosPrincipais)
         }
     }
 
     // Função Gravar Dados Alterados
     let AlterarTabelaEArray = () => {
         if (auxAlterar == 1) {
-            for (let j = 0; j < divIndex.length;) {
-                for (let i = 0; i < dadosContatos.length; i++) {
-                    if (idAux == dadosContatos[i].idDadosPrincipais) {
-                        dadosContatos[i].nome = divIndex[j].children[1].value
-                        dadosContatos[i].email = divIndex[j].children[2].value
-                        dadosContatos[i].numero = divIndex[j].children[3].value
-                        j++
-                    }
-                }
-            }
+            // for (let j = 0; j < divIndex.length;) {
+            //     for (let i = 0; i < dadosContatos.length; i++) {
+            //         if (idAux == dadosContatos[i].idDadosPrincipais) {
+            //             dadosContatos[i].nome = divIndex[j].children[1].value
+            //             dadosContatos[i].email = divIndex[j].children[2].value
+            //             dadosContatos[i].numero = divIndex[j].children[3].value
+            //             j++
+            //         }
+            //     }
+            // }
             for (let i = 0; i < dadosPrincipais.length; i++) {
                 if (idAux == dadosPrincipais[i].id) {
-
-                    dadoID[idAux].innerHTML = idAux
-                    dadosPrincipais[idAux].id = idAux
-                    dadoEmail[idAux].innerHTML = email.value
-                    dadosPrincipais[idAux].email = email.value
-                    dadoNome[idAux].innerHTML = nome.value
-                    dadosPrincipais[idAux].nome = nome.value
+                    dadosPrincipais[idAux].idFixo = idAux
+                    dadoEmail[idAux].innerHTML = email
+                    dadosPrincipais[idAux].email = email
+                    dadoNome[idAux].innerHTML = nome
+                    dadosPrincipais[idAux].nome = nome
+                    dadosPrincipais[idAux].nomeContato = nomeContato
+                    dadosPrincipais[idAux].emailContato = emailContato
+                    dadosPrincipais[idAux].numeroContato = numeroContato
                     idAux = undefined
                     limparCampos()
                 }
@@ -301,15 +301,6 @@ Formulario.addEventListener("submit", (e) => {
         }
     }
 
-
-    if (
-        validacaoNome.style.display == 'none' && validacaoEmail.style.display == 'none'
-        && validacaoCPF.style.display == 'none' && validacaoEmailContato.style.display == 'none'
-        && validacaoNomeContato.style.display == 'none' && validacaoNumeroContato.style.display == 'none' &&
-        auxAlterar == 0 && valorBtnContato != 0) {
-        gravarDados()
-        gravarTabela()
-    }
 
 
     // Chamada de Funções
@@ -330,6 +321,14 @@ Formulario.addEventListener("submit", (e) => {
     validacaoContatoPrincipal()
     AlterarTabelaEArray()
 
+    if (
+        validacaoNome.style.display == 'none' && validacaoEmail.style.display == 'none'
+        && validacaoCPF.style.display == 'none' && validacaoEmailContato.style.display == 'none'
+        && validacaoNomeContato.style.display == 'none' && validacaoNumeroContato.style.display == 'none' &&
+        auxAlterar == 0 && valorBtnContato != 0) {
+        gravarDados()
+        gravarTabela()
+    }
 
     auxAlterar = 0
     btnNovoContato[0].style.display = "flex"
@@ -343,30 +342,18 @@ let editarLinha = () => {
         index = $(this).attr("data-index")
 
         // Colocar Dados da Tabela no Input
-        nome.value = dadosPrincipais[index].nome
-        email.value = dadosPrincipais[index].email
-        cpf.value = dadosPrincipais[index].cpf
-        cep.value = dadosPrincipais[index].cep
-        rua.value = dadosPrincipais[index].rua
-        estado.value = dadosPrincipais[index].estado
+        nomePrincipal.value = dadosPrincipais[index].nome
+        emailPrincipal.value = dadosPrincipais[index].email
+        cpfPrincipal.value = dadosPrincipais[index].cpf
+        cepPrincipal.value = dadosPrincipais[index].cep
+        ruaPrincipal.value = dadosPrincipais[index].rua
+        estadoPrincipal.value = dadosPrincipais[index].estado
         select.value = dadosPrincipais[index].formacao
-        emailContato.value = dadosContatos[index].emailContatoP
-        nomeContato.value = dadosContatos[index].nomeContatoP
-        numeroContato.value = dadosContatos[index].numeroContatoP
-        idAux = dadosPrincipais[index].id
-        indexAux = index
+        emailContatoPrincipal.value = dadosPrincipais[index].emailContato
+        nomeContatoPrincipal.value = dadosPrincipais[index].nomeContato
+        numeroContatoPrincipal.value = dadosPrincipais[index].numeroContato
+        idAux = index
         auxAlterar = 1
-
-        for (let j = 0; j < (dadosContatos[index].idContato + 1);) {
-            for (let i = 0; i < dadosContatos.length; i++) {
-                if (idAux == dadosContatos[i].idDadosPrincipais) {
-                    divIndex[j].children[1].value = dadosContatos[i].nome
-                    divIndex[j].children[2].value = dadosContatos[i].email
-                    divIndex[j].children[3].value = dadosContatos[i].numero
-                    j++
-                }
-            }
-        }
     });
     btnNovoContato[0].style.display = "none"
 }
@@ -423,7 +410,6 @@ let gravarTabela = () => {
     acrescentarButtonExcluir.appendChild(excluir)
     contadorButtonExcluir++
     contadorBotaoEditar++
-    ctdID++
     limparCampos()
 }
 
@@ -437,6 +423,12 @@ let excluirLinha = () => {
             buttonsEditar[i].setAttribute("data-index", i)
         }
         contadorBotaoEditar = buttonsEditar.length
+        for(let i = 0; i < dadosPrincipais.length; i++){
+            dadosPrincipais[i].id = i
+            dadoID[i].innerHTML = dadosPrincipais[i].id
+        }
+        ctdAuxId = dadosPrincipais.length
+        console.log(dadosPrincipais)
         limparCampos()
     });
 }
@@ -460,7 +452,7 @@ let criarContato = () => {
 
     let novoContatoNome = document.createElement('input')
     novoContatoNome.setAttribute("type", "text")
-    novoContatoNome.setAttribute("required", '')
+    // novoContatoNome.setAttribute("required", '')
     novoContatoNome.setAttribute("placeholder", "Nome *")
     novoContatoNome.setAttribute("data-name", "Nome")
     novaDiv.appendChild(novoContatoNome)
@@ -469,7 +461,7 @@ let criarContato = () => {
 
     let novoContatoEmail = document.createElement('input')
     novoContatoEmail.setAttribute("type", "text")
-    novoContatoEmail.setAttribute("required", '')
+    // novoContatoEmail.setAttribute("required", '')
     novoContatoEmail.setAttribute("placeholder", "Email *")
     novoContatoEmail.setAttribute("data-name", "Email")
     novaDiv.appendChild(novoContatoEmail)
@@ -479,7 +471,7 @@ let criarContato = () => {
     let novoContatoNumero = document.createElement('input')
     novoContatoNumero.setAttribute("type", "text")
     novoContatoNumero.setAttribute("class", "numeroAlternativo")
-    novoContatoNumero.setAttribute("required", '')
+    // novoContatoNumero.setAttribute("required", '')
     novoContatoNumero.setAttribute("placeholder", "Numero de Telefone *")
     novoContatoNumero.setAttribute("data-name", "Numero")
     novaDiv.appendChild(novoContatoNumero)
@@ -497,16 +489,16 @@ let criarContato = () => {
 // Função para limpar campos
 
 let limparCampos = () => {
-    nome.value = ""
-    email.value = ""
-    cpf.value = ""
-    cep.value = ""
-    rua.value = ""
-    estado.value = ""
+    nomePrincipal.value = ""
+    emailPrincipal.value = ""
+    cpfPrincipal.value = ""
+    cepPrincipal.value = ""
+    ruaPrincipal.value = ""
+    estadoPrincipal.value = ""
     select.value = "Default"
-    emailContato.value = ""
-    nomeContato.value = ""
-    numeroContato.value = ""
+    emailContatoPrincipal.value = ""
+    nomeContatoPrincipal.value = ""
+    numeroContatoPrincipal.value = ""
 
     for (let j = 0; j < divIndex.length; j++) {
         divIndex[j].children[1].value = ""
