@@ -83,8 +83,10 @@ Formulario.addEventListener("submit", (e) => {
 
 
     // Declarações Dados Principais
+    
     let nomePrincipal = document.getElementById('nomePrincipal').value
-    let emailPrincipal = document.getElementById("emailPrincipal").value
+
+    // let emailPrincipal = document.getElementById("emailPrincipal").value
     let cpfPrincipal = document.getElementById("cpfPrincipal").value
     let cepPrincipal = document.getElementById("cep").value
     let ruaPrincipal = document.getElementById("rua").value
@@ -229,19 +231,44 @@ Formulario.addEventListener("submit", (e) => {
         }
     }
 
-    // Função Gravar Dados no Objeto
-    let gravarDadosP = () => {
+    // Função Gravar Dados
+    let gravarDados = () => {
         if (auxAlterar == 0) {
-            let arrayInformacoesP = {}
-            arrayInformacoesP.id = ctdID
-            arrayInformacoesP.nome = nomePrincipal
-            arrayInformacoesP.cpf = cpfPrincipal
-            arrayInformacoesP.email = emailPrincipal
-            arrayInformacoesP.cep = cepPrincipal
-            arrayInformacoesP.rua = ruaPrincipal
-            arrayInformacoesP.estado = estadoPrincipal
-            arrayInformacoesP.formacao = select.options[select.selectedIndex].value;
-            dadosPrincipais.push(arrayInformacoesP)
+            if (valorBtnContato === 0) {
+                alert("Mínimo de 2 Contatos")
+            }
+
+            else {
+
+                var contatoInformacoesPrincipais = {}
+                let contatoInformacoesDinamicas = []
+                let objetoInformacoesDinamicas = {}
+
+                contatoInformacoesPrincipais.id = ctdID
+                contatoInformacoesPrincipais.nome = nomePrincipal
+                contatoInformacoesPrincipais.cpf = cpfPrincipal
+                contatoInformacoesPrincipais.email = emailPrincipal
+                contatoInformacoesPrincipais.cep = cepPrincipal
+                contatoInformacoesPrincipais.rua = ruaPrincipal
+                contatoInformacoesPrincipais.estado = estadoPrincipal
+                contatoInformacoesPrincipais.formacao = select.options[select.selectedIndex].value;
+                contatoInformacoesPrincipais.nomeContatoP = nomeContatoPrincipal
+                contatoInformacoesPrincipais.emailContatoP = emailContatoPrincipal
+                contatoInformacoesPrincipais.numeroContatoP = numeroContatoPrincipal
+
+                for (let i = 0; i < divIndex.length; i++) {
+                    objetoInformacoesDinamicas.idContato = contadorContatos - 1
+                    objetoInformacoesDinamicas.nome = divIndex[i].children[1].value
+                    objetoInformacoesDinamicas.email = divIndex[i].children[2].value
+                    objetoInformacoesDinamicas.numero = divIndex[i].children[3].value
+                    contatoInformacoesDinamicas.push(objetoInformacoesDinamicas)
+                    objetoInformacoesDinamicas = {}
+                }
+
+                contatoInformacoesPrincipais.contatos = contatoInformacoesDinamicas
+                dadosPrincipais.push(contatoInformacoesPrincipais)
+                ctdID++
+            }
         }
     }
 
@@ -274,45 +301,17 @@ Formulario.addEventListener("submit", (e) => {
         }
     }
 
-    // Função Validar Contato Alternativos
-
-
-
-    // Função Gravar Dados Contatos
-
-    let gravarDadosC = () => {
-        if (valorBtnContato === 0) {
-            alert("Mínimo de 2 Contatos")
-        }
-        else {
-            if (auxAlterar == 0) {
-                let arrayInformacoesC = {}
-                for (let i = 0; i < divIndex.length; i++) {
-                    arrayInformacoesC.nomeContatoP = nomeContatoPrincipal
-                    arrayInformacoesC.emailContatoP = emailContatoPrincipal
-                    arrayInformacoesC.numeroContatoP = numeroContatoPrincipal
-                    arrayInformacoesC.idDadosPrincipais = ctdID
-                    arrayInformacoesC.idContato = contadorContatos - 1
-                    arrayInformacoesC.nome = divIndex[i].children[1].value
-                    arrayInformacoesC.email = divIndex[i].children[2].value
-                    arrayInformacoesC.numero = divIndex[i].children[3].value
-                    dadosContatos.push(arrayInformacoesC)
-                    arrayInformacoesC = {}
-                }
-
-            }
-        }
-    }
-
 
     if (
         validacaoNome.style.display == 'none' && validacaoEmail.style.display == 'none'
         && validacaoCPF.style.display == 'none' && validacaoEmailContato.style.display == 'none'
         && validacaoNomeContato.style.display == 'none' && validacaoNumeroContato.style.display == 'none' &&
         auxAlterar == 0 && valorBtnContato != 0) {
-        gravarDadosP()
+        gravarDados()
         gravarTabela()
     }
+
+
     // Chamada de Funções
 
     let validacaoDadosPrincipais = () => {
@@ -327,7 +326,6 @@ Formulario.addEventListener("submit", (e) => {
         validarEmail()
         validarNumeros()
     }
-    gravarDadosC()
     validacaoDadosPrincipais()
     validacaoContatoPrincipal()
     AlterarTabelaEArray()
@@ -369,7 +367,6 @@ let editarLinha = () => {
                 }
             }
         }
-        console.log(dadosContatos)
     });
     btnNovoContato[0].style.display = "none"
 }
@@ -481,10 +478,17 @@ let criarContato = () => {
 
     let novoContatoNumero = document.createElement('input')
     novoContatoNumero.setAttribute("type", "text")
-    novoContatoNumero.setAttribute("required",'')
+    novoContatoNumero.setAttribute("class", "numeroAlternativo")
+    novoContatoNumero.setAttribute("required", '')
     novoContatoNumero.setAttribute("placeholder", "Numero de Telefone *")
     novoContatoNumero.setAttribute("data-name", "Numero")
     novaDiv.appendChild(novoContatoNumero)
+
+    // Aplicando Mascara no Numero
+    $(document).ready(function () {
+        $('.numeroAlternativo').mask('(00) 00000-0000')
+    });
+
     valorBtnContato++
 
 
