@@ -15,9 +15,9 @@ let select = document.getElementById("select")
 let contadorButtonEditar = 0;
 let idAux = -1;
 let valorBtnContato = 0;
-let indexAux;
 let index = 0;
 let ctdAuxId = 0
+let aux = 0
 
 
 
@@ -51,9 +51,7 @@ $(document).on('click', '.buttonExcluirLinha', function () {
     excluirLinha()
 });
 
-// Validar Numero
-var validarNumero = "0123456789"
-let aux = 0
+
 
 //Contatos
 
@@ -83,8 +81,6 @@ const btnNovoContato = document.getElementsByClassName("btn")
 
 var dadosPrincipais = []
 
-var dadosContatos = []
-
 var ctdID = 0
 
 // Função Remover Campos Dinamicos
@@ -94,6 +90,7 @@ let removerCampos = () => {
         contatosAlternativos.removeChild(contatosAlternativos.firstChild);
     }
 }
+
 
 // Submit
 
@@ -113,8 +110,6 @@ Formulario.addEventListener("submit", (e) => {
 
     // Função Validar Nome
     let validarNome = () => {
-
-        // Dados Principais (Nome)
         if (nome == "") {
 
             validacaoNome.style.display = "block"
@@ -126,7 +121,6 @@ Formulario.addEventListener("submit", (e) => {
         }
 
         // Contato Principal (Nome)
-
         if (nomeContato == "") {
 
             validacaoNomeContato.style.display = "block"
@@ -395,7 +389,6 @@ let excluirLinha = () => {
         dadoID[i].innerHTML = dadosPrincipais[i].id
     }
     ctdAuxId = dadosPrincipais.length
-    console.log(dadosPrincipais)
     limparCampos()
     removerCampos()
     btnNovoContato[0].style.display = "flex"
@@ -406,6 +399,7 @@ let excluirLinha = () => {
 
 // Função Gravar dados na Tabela
 let gravarTabela = () => {
+    
     var novaLinha = document.createElement('tr')
     novaLinha.setAttribute("id", "novaLinhaTR")
     tableForm.appendChild(novaLinha)
