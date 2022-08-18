@@ -8,11 +8,12 @@ let estadoPrincipal = document.getElementById("estado")
 let emailContatoPrincipal = document.getElementById("emailContatoPrincipal")
 let nomeContatoPrincipal = document.getElementById("nomeContatoPrincipal")
 let numeroContatoPrincipal = document.getElementById("numeroContatoPrincipal")
+let contatosAlternativos = document.getElementById("contatosAlternativos")
 let select = document.getElementById("select")
 
 
-let contadorBotaoEditar = 0;
-let idAux;
+let contadorButtonEditar = 0;
+let idAux = -1;
 let valorBtnContato = 0;
 let indexAux;
 let index = 0;
@@ -33,11 +34,21 @@ const buttonsEditar = document.getElementsByClassName('buttonEditarLinha')
 let auxAlterar = 0
 
 
-// Mascara para campos
+
 $(document).ready(function () {
     $('#numeroContatoPrincipal').mask('(00) 00000-0000')
     $('#cep').mask('00000-000')
     $('#cpfPrincipal').mask('000.000.000-00')
+});
+
+$(document).on('click', '.buttonEditarLinha', function () {
+    index = $(this).attr("data-index")
+    editarLinha(index)
+});
+$(document).on('click', '.buttonExcluirLinha', function () {
+    dadosPrincipais.splice($(this).attr("data-index"), 1)
+    $(this).parent().parent().remove();
+    excluirLinha()
 });
 
 // Validar Numero
@@ -76,6 +87,13 @@ var dadosContatos = []
 
 var ctdID = 0
 
+// Função Remover Campos Dinamicos
+
+let removerCampos = () => {
+    while (contatosAlternativos.firstChild) {
+        contatosAlternativos.removeChild(contatosAlternativos.firstChild);
+    }
+}
 
 // Submit
 
@@ -266,13 +284,13 @@ Formulario.addEventListener("submit", (e) => {
                 dadosPrincipais.push(contatoInformacoesPrincipais)
                 ctdID++
                 ctdAuxId++
+                gravarTabela()
             }
-            console.log(dadosPrincipais)
         }
     }
 
     // Função Gravar Dados Alterados
-    let AlterarTabelaEArray = () => {
+    let alterarTabelaEArray = () => {
         if (auxAlterar == 1) {
             for (let i = 0; i < dadosPrincipais[idAux].contatos.length; i++) {
                 dadosPrincipais[idAux].contatos[i].nome = divIndex[i].children[1].value
@@ -314,50 +332,75 @@ Formulario.addEventListener("submit", (e) => {
     }
     validacaoDadosPrincipais()
     validacaoContatoPrincipal()
-    AlterarTabelaEArray()
-
     if (
         validacaoNome.style.display == 'none' && validacaoEmail.style.display == 'none'
         && validacaoCPF.style.display == 'none' && validacaoEmailContato.style.display == 'none'
         && validacaoNomeContato.style.display == 'none' && validacaoNumeroContato.style.display == 'none' &&
-        auxAlterar == 0 && valorBtnContato != 0) {
+        auxAlterar == 0) {
         gravarDados()
-        gravarTabela()
     }
+    alterarTabelaEArray()
 
+
+    removerCampos()
     auxAlterar = 0
+    contadorContatos = 0
     btnNovoContato[0].style.display = "flex"
-
 })
 
-// Função Alterar
+// // Função Alterar
 
-let editarLinha = () => {
-    $(document).on('click', '.buttonEditarLinha', function () {
-        index = $(this).attr("data-index")
+let editarLinha = (idx) => {
+    limparCampos()
+    removerCampos()
+    contadorContatos = 0
 
-        // Colocar Dados da Tabela no Input
-        nomePrincipal.value = dadosPrincipais[index].nome
-        emailPrincipal.value = dadosPrincipais[index].email
-        cpfPrincipal.value = dadosPrincipais[index].cpf
-        cepPrincipal.value = dadosPrincipais[index].cep
-        ruaPrincipal.value = dadosPrincipais[index].rua
-        estadoPrincipal.value = dadosPrincipais[index].estado
-        select.value = dadosPrincipais[index].formacao
-        emailContatoPrincipal.value = dadosPrincipais[index].emailContato
-        nomeContatoPrincipal.value = dadosPrincipais[index].nomeContato
-        numeroContatoPrincipal.value = dadosPrincipais[index].numeroContato
-        idAux = index
+    // Colocar Dados da Tabela no Input
+    nomePrincipal.value = dadosPrincipais[idx].nome
+    emailPrincipal.value = dadosPrincipais[idx].email
+    cpfPrincipal.value = dadosPrincipais[idx].cpf
+    cepPrincipal.value = dadosPrincipais[idx].cep
+    ruaPrincipal.value = dadosPrincipais[idx].rua
+    estadoPrincipal.value = dadosPrincipais[idx].estado
+    select.value = dadosPrincipais[idx].formacao
+    emailContatoPrincipal.value = dadosPrincipais[idx].emailContato
+    nomeContatoPrincipal.value = dadosPrincipais[idx].nomeContato
+    numeroContatoPrincipal.value = dadosPrincipais[idx].numeroContato
+    idAux = idx
 
-        for (let i = 0; i < dadosPrincipais[index].contatos.length; i++) {
-            divIndex[i].children[1].value = dadosPrincipais[index].contatos[i].nome
-            divIndex[i].children[2].value = dadosPrincipais[index].contatos[i].email
-            divIndex[i].children[3].value = dadosPrincipais[index].contatos[i].numero
-        }
+    for (let i = 0; i < dadosPrincipais[index].contatos.length; i++) {
+        criarContato()
+        divIndex[i].children[1].value = dadosPrincipais[index].contatos[i].nome
+        divIndex[i].children[2].value = dadosPrincipais[index].contatos[i].email
+        divIndex[i].children[3].value = dadosPrincipais[index].contatos[i].numero
+    }
 
-        auxAlterar = 1
-    });
+    auxAlterar = 1
     btnNovoContato[0].style.display = "none"
+}
+
+// Função Excluir Linha
+
+let excluirLinha = () => {
+    for (let i = 0; i < buttonsEditar.length; i++) {
+        buttonsEditar[i].setAttribute("data-index", i)
+    }
+    for (let i = 0; i < buttonsExcluir.length; i++) {
+        buttonsExcluir[i].setAttribute("data-index", i)
+    }
+    contadorButtonEditar = buttonsEditar.length
+    contadorBotaoExcluir = buttonsExcluir.length
+    for (let i = 0; i < dadosPrincipais.length; i++) {
+        dadosPrincipais[i].id = i
+        dadoID[i].innerHTML = dadosPrincipais[i].id
+    }
+    ctdAuxId = dadosPrincipais.length
+    console.log(dadosPrincipais)
+    limparCampos()
+    removerCampos()
+    btnNovoContato[0].style.display = "flex"
+    auxAlterar = 0
+    contadorContatos = 0
 }
 
 
@@ -388,8 +431,7 @@ let gravarTabela = () => {
         var editar = document.createElement('button')
         editar.setAttribute('id', 'buttonEditar')
         editar.setAttribute('class', 'buttonEditarLinha')
-        editar.setAttribute('onclick', 'editarLinha()')
-        editar.setAttribute('data-index', contadorBotaoEditar)
+        editar.setAttribute('data-index', contadorButtonEditar)
         editar.innerHTML = 'Editar'
 
         // Excluir
@@ -399,7 +441,6 @@ let gravarTabela = () => {
         excluir.setAttribute('id', 'buttonExcluir')
         excluir.setAttribute('data-index', contadorButtonExcluir)
         excluir.setAttribute('class', 'buttonExcluirLinha')
-        excluir.setAttribute('onclick', 'excluirLinha()')
         excluir.innerHTML = 'Excluir'
 
     }
@@ -411,32 +452,13 @@ let gravarTabela = () => {
     novaLinha.appendChild(acrescentarButtonExcluir)
     acrescentarButtonExcluir.appendChild(excluir)
     contadorButtonExcluir++
-    contadorBotaoEditar++
+    contadorButtonEditar++
     limparCampos()
 }
 
-// Função Excluir Linha
-
-let excluirLinha = () => {
-    $(document).on('click', '.buttonExcluirLinha', function () {
-        dadosPrincipais.splice($(this).attr("data-index"), 1)
-        $(this).parent().parent().remove();
-        for (let i = 0; i < buttonsEditar.length; i++) {
-            buttonsEditar[i].setAttribute("data-index", i)
-        }
-        contadorBotaoEditar = buttonsEditar.length
-        for (let i = 0; i < dadosPrincipais.length; i++) {
-            dadosPrincipais[i].id = i
-            dadoID[i].innerHTML = dadosPrincipais[i].id
-        }
-        ctdAuxId = dadosPrincipais.length
-    });
-    limparCampos()
-}
 
 // Função Criar Contato Alternativo
 let criarContato = () => {
-
 
     // Criar DIV
     let novaDiv = document.createElement('div')
@@ -453,7 +475,7 @@ let criarContato = () => {
 
     let novoContatoNome = document.createElement('input')
     novoContatoNome.setAttribute("type", "text")
-    // novoContatoNome.setAttribute("required", '')
+    novoContatoNome.setAttribute("required", '')
     novoContatoNome.setAttribute("placeholder", "Nome *")
     novoContatoNome.setAttribute("data-name", "Nome")
     novaDiv.appendChild(novoContatoNome)
@@ -462,7 +484,7 @@ let criarContato = () => {
 
     let novoContatoEmail = document.createElement('input')
     novoContatoEmail.setAttribute("type", "text")
-    // novoContatoEmail.setAttribute("required", '')
+    novoContatoEmail.setAttribute("required", '')
     novoContatoEmail.setAttribute("placeholder", "Email *")
     novoContatoEmail.setAttribute("data-name", "Email")
     novaDiv.appendChild(novoContatoEmail)
@@ -472,7 +494,7 @@ let criarContato = () => {
     let novoContatoNumero = document.createElement('input')
     novoContatoNumero.setAttribute("type", "text")
     novoContatoNumero.setAttribute("class", "numeroAlternativo")
-    // novoContatoNumero.setAttribute("required", '')
+    novoContatoNumero.setAttribute("required", '')
     novoContatoNumero.setAttribute("placeholder", "Numero de Telefone *")
     novoContatoNumero.setAttribute("data-name", "Numero")
     novaDiv.appendChild(novoContatoNumero)
@@ -483,8 +505,6 @@ let criarContato = () => {
     });
 
     valorBtnContato++
-
-
 }
 
 // Função para limpar campos
