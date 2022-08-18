@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Links -->
+    <link rel="stylesheet" href="style.css">
+    
+
+    <title>Desafio_01</title>
+</head>
+
+<body>
+    <!-- Formulário -->
+    <div class="titulo">Formulário de Cadastro</div>
+    <div class="container">
+        <form id="form-cadastro">
+            <!-- Dados Principais -->
+            <input type="text" placeholder="Digite seu Nome *" id="nomePrincipal">
+            <span class="texto-validacao" id="validacao-nome">Campo Obrigatório</span>
+            <input type="text" placeholder="Digite seu E-mail *" id="emailPrincipal">
+            <span class="texto-validacao" id="validacao-email"></span>
+            <input type="text" placeholder="Digite seu CPF *" id="cpfPrincipal">
+            <span class="texto-validacao" id="validacao-cpf"></span>
+
+            <!-- Endereço -->
+            <p>Endereço:</p>
+            <input type="text" placeholder="CEP" id="cep">
+            <input type="text" placeholder="Rua" id="rua">
+            <input type="text" placeholder="Cidade/Estado" id="estado">
+
+            <!-- Formação -->
+            <div class="select-formacao">
+                <p>Formação:</p>
+                <select id="select">
+                    <option value="Default">Selecione sua Formação</option>
+                    <option value="Fundamental">Ensino Fundamental</option>
+                    <option value="Medio">Ensino Medio</option>
+                    <option value="Superior">Ensino Superior</option>
+                </select>
+            </div>
+
+            <!-- Contatos -->
+            <div>
+                <p>Contato Principal:</p>
+                <input type="text" placeholder="Nome *" id="nomeContatoPrincipal">
+                <span class="texto-validacao" id="validacaoNomeContato">Campo Obrigatório</span>
+                <input type="text" placeholder="E-mail *" id="emailContatoPrincipal">
+                <span class="texto-validacao" id="validacaoEmailContato"></span>
+                <input type="text" placeholder="Telefone *" id="numeroContatoPrincipal">
+                <span class="texto-validacao" id="validacaoNumeroContato"></span>
+            </div>
+
+            <div id="contatosAlternativos"></div>
+
+            <!-- Botões -->
+            <div class="btn">
+                <button class="btnNovoContato" type="button" onclick="criarContato()">Adicionar Contato Alternativo</button>
+            </div>
+            <div class="button">
+                <button type="submit" id="buttonSubmit">Salvar</button>
+            </div>
+        </form>
+    
+    </div>
+
+
+    <!-- Tabela -->
+
+    <table align="center" id="table-form" border="1">
+        <tr class="table-title">
+            <td>ID:</td>
+            <td>NOME:</td>
+            <td>E-MAIL:</td>
+        </tr>
+    </table>
+
+
+
+    <!-- Box Personalizado -->
+    <div class="box">
+        <div class="box-container">
+            <span class="box-lt"></span>
+            <span class="box-rt"></span>
+        </div>
+        <span class="box-name">E-mail</span>
+    </div>
+
+
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
