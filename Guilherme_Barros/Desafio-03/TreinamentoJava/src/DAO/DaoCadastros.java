@@ -1,7 +1,6 @@
 package DAO;
 
 import Cadastro.Cadastro;
-import Cadastro.Contato;
 
 import java.util.ArrayList;
 
@@ -34,7 +33,9 @@ public class DaoCadastros {
             if (ID == i) {
                 arrayList.remove(i);
             }
-            arrayList.get(i).setID(i);
+            if (!arrayList.isEmpty()) {
+                arrayList.get(i).setID(i);
+            }
         }
     }
 }

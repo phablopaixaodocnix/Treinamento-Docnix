@@ -2,7 +2,6 @@ package Controller;
 
 import Cadastro.Cadastro;
 import DAO.DaoCadastros;
-import Cadastro.Contato;
 
 import java.util.ArrayList;
 
