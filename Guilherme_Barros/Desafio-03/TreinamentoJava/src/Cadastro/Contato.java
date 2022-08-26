@@ -12,7 +12,7 @@ public class Contato {
     private int IdContato;
     private String nomeAlternativo;
     private String emailAlternativo;
-    private long telefoneAlternativo;
+    private String telefoneAlternativo;
 
     public String getNomeAlternativo() {
         return nomeAlternativo;
@@ -30,11 +30,11 @@ public class Contato {
         this.emailAlternativo = emailAlternativo;
     }
 
-    public long getTelefoneAlternativo() {
+    public String getTelefoneAlternativo() {
         return telefoneAlternativo;
     }
 
-    public void setTelefoneAlternativo(long telefoneAlternativo) {
+    public void setTelefoneAlternativo(String telefoneAlternativo) {
         this.telefoneAlternativo = telefoneAlternativo;
     }
 

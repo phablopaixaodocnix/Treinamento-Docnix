@@ -17,45 +17,42 @@ public class Principal {
     Cadastro cadastro;
     Contato contato;
 
-    private long checkNumberAux = 0;
+    private int checkNumberAux = 0;
     private int calc = 0;
+    private String stringRegex = "[0-9]*";
 
     private int EdicaoAux = 0;
-    private long CPFaux = 0;
-    private long CEPaux = 0;
     private String Emailaux;
     private int validarEmailAux = 0;
-    private long telefoneAux = 0;
     private int contadorAux = 1;
     private String StringAux;
 
-    private long opcaoAdicionarContatos = 0;
-    private int opcao = 0;
+    private String opcaoAdicionarContatos;
+    private String opcao;
 
-    private int ID;
-    private long IDOpcao = 0;
-    private long validarIdSelecionado = 0;
+    private String ID = "0";
+    private String IDOpcao;
+    private String validarIdSelecionado;
 
 
     public void MenuDoCrud() {
         do {
             System.out.println(printMenu());
             opcao = checkNumberOpcao();
-            scan.nextLine();
             switch (opcao) {
-                case 1:
+                case "1":
                     //Incluir Cadastros
                     incluirArray();
                     break;
-                case 2:
+                case "2":
                     //Editar Cadastros
                     editarArray();
                     break;
-                case 3:
+                case "3":
                     //Excluir Cadastro
                     excluirArray();
                     break;
-                case 4:
+                case "4":
                     //Listar Cadastro
                     if (cadastroArray.isEmpty()) {
                         System.out.println("Cadastre Primeiramente \n");
@@ -63,22 +60,17 @@ public class Principal {
                         controllerCadastros.listar(cadastroArray);
                     }
                     break;
-                case 5:
+                case "5":
                     System.out.println("Saindo...");
                     break;
                 default:
-                    System.out.println("Digite uma Opção Válida");
+                    System.out.println("Digite um Valor válido");
             }
-        } while (opcao != 5);
+        } while (!opcao.equals("5"));
     }
 
-    public int checkNumberOpcao() {
-        if (scan.hasNextInt()) {
-            return scan.nextInt();
-        } else {
-            return 0;
-        }
-
+    public String checkNumberOpcao() {
+        return validarInputNumero("valor");
     }
 
     public void setDados() {
@@ -87,7 +79,7 @@ public class Principal {
         System.out.println("Digite seu Email:");
         input.setEmail(validarEmail());
         System.out.println("Digite seu CPF:");
-        input.setCpf(validarCampoCPF());
+        input.setCpf(validarCPF());
         System.out.println("Digite seu CEP:");
         input.setCep(validarCEP());
         System.out.println("Digite sua Rua:");
@@ -103,7 +95,7 @@ public class Principal {
         if (EdicaoAux == 1) {
             contatoArray = new ArrayList<>();
             for (int i = 0; i < cadastroArray.size(); i++) {
-                if (IDOpcao == cadastroArray.get(i).getID()) {
+                if (IDOpcao.equals(cadastroArray.get(i).getID())) {
                     ArrayList<Contato> arrayContato = cadastroArray.get(i).getArrayListContato();
                     for (int j = 0; j < arrayContato.size(); j++) {
                         System.out.println("Contato Alternativo " + j + "\n");
@@ -121,10 +113,9 @@ public class Principal {
             input.setArrayList(contatoArray);
         } else {
             System.out.println("0 - Adicionar Contato Alternativo" + "   " + "1 - Salvar\n");
-            opcaoAdicionarContatos = validarOpcaoSelecionadaDeContatoAlternativo(validarIdSelecionado());
-            while (opcaoAdicionarContatos == 0) {
+        opcaoAdicionarContatos = validarIdSelecionado();
+            while (opcaoAdicionarContatos.equals("0")) {
                 contato = new Contato();
-                contato.setIdContato(ID);
                 System.out.println("Digite o Nome: ");
                 contato.setNomeAlternativo(scan.next());
                 System.out.println("Digite o Email: ");
@@ -133,7 +124,7 @@ public class Principal {
                 contato.setTelefoneAlternativo(validarTelefone());
                 contatoArray.add(contato);
                 System.out.println("0 - Adicionar Contato Alternativo" + "   " + "1 - Salvar\n");
-                opcaoAdicionarContatos = validarOpcaoSelecionadaDeContatoAlternativo(validarIdSelecionado());
+                opcaoAdicionarContatos = validarIdSelecionado();
             }
             input.setArrayList(contatoArray);
         }
@@ -147,8 +138,7 @@ public class Principal {
             EdicaoAux = 0;
         } else {
             cadastro.setID(ID);
-
-            ID++;
+            ID = String.valueOf(Integer.parseInt(ID) + 1);
         }
 
         cadastro.setNome(input.getNome());
@@ -164,93 +154,74 @@ public class Principal {
         contatoArray = new ArrayList();
     }
 
-    public long validarInputNumero() {
-        if (scan.hasNextLong()) {
-            checkNumberAux = scan.nextLong();
-            scan.nextLine();
-            return checkNumberAux;
-        } else {
-            scan.nextLine();
-            return -1;
+    public String validarInputNumero(String campoDeVerificacao) {
+        String campoInput = scan.next();
+        while (!campoInput.matches(stringRegex)) {
+            System.out.println("Digite um " + campoDeVerificacao + " válido");
+            campoInput = scan.next();
         }
+        return campoInput;
     }
 
-    public long validarIdSelecionado() {
-        validarIdSelecionado = validarInputNumero();
-        while (validarIdSelecionado == -1) {
-            System.out.println("Digite um Numero Válido");
-            validarIdSelecionado = validarInputNumero();
+    public String validarIdSelecionado() {
+        validarIdSelecionado = validarInputNumero("ID");
+        while (!validarIdSelecionado.equals("0") && !validarIdSelecionado.equals("1")){
+            System.out.println("Digite um ID válido");
+            validarIdSelecionado = validarInputNumero("ID");
         }
         return validarIdSelecionado;
     }
 
-    public long validarOpcaoSelecionadaDeContatoAlternativo(long op) {
-        while (op != 1 && op != 0) {
-            System.out.println("Digite uma Opção Válida");
-            op = validarInputNumero();
-        }
-        return op;
-    }
-
-    public long validarCampoCPF() {
-        CPFaux = validarInputNumero();
+    public String validarCampoCPF() {
+        StringAux = validarInputNumero("CPF");
         calc = 0;
         contadorAux = 1;
-        while (CPFaux == -1) {
-            System.out.println("Digite um CPF Válido");
-            CPFaux = validarInputNumero();
-        }
-        return validarCPF();
-
+        return StringAux;
     }
 
-    public long validarCPF() {
-        StringAux = Long.toString(CPFaux);
-
-        if (StringAux.length() != 11) {
-            System.out.println("Digite um CPF Válido");
+    public String validarCPF() {
+        validarCampoCPF();
+        while (StringAux.length() != 11) {
+            System.out.println("Digite um CPF válido");
             validarCampoCPF();
-        } else {
-            for (int i = 0; i < 9; i++) {
+        }
+        for (int i = 0; i < 9; i++) {
+            calc += charToInt(i) * contadorAux;
+            contadorAux++;
+        }
+
+        calc = calc % 11;
+        // Se calc for igual a primeiro digito verificador, primeiro digito valido
+        if (calc >= 10) calc = 0;
+        if (calc ==
+
+                charToInt(9)) {
+            //Calculando Segundo Digito Verificador
+            contadorAux = 0;
+            calc = 0;
+            for (int i = 0; i < 10; i++) {
                 calc += charToInt(i) * contadorAux;
                 contadorAux++;
             }
             calc = calc % 11;
-            // Se calc for igual a primeiro digito verificador, primeiro digito valido
-            if (calc >= 10) calc = 0;
-            if (calc == charToInt(9)) {
-                //Calculando Segundo Digito Verificador
-                contadorAux = 0;
-                calc = 0;
-                for (int i = 0; i < 10; i++) {
-                    calc += charToInt(i) * contadorAux;
-                    contadorAux++;
-                }
-                calc = calc % 11;
-                if (calc == charToInt(10)) {
-                    return CPFaux;
-                } else {
-                    do {
-                        System.out.println("Digite um CPF Válido");
-                    } while (validarCampoCPF() != -1);
-                }
+            if (calc == charToInt(10)) {
+                return StringAux;
             } else {
-                do {
-                    System.out.println("Digite um CPF Válido");
-                } while (validarCampoCPF() != -1);
-
+                validarInputNumero("CPF");
             }
+        } else {
+            validarInputNumero("CPF");
         }
-        return -1;
+        return null;
     }
 
-    public long validarCEP() {
-        CEPaux = validarInputNumero();
-        while (CEPaux == -1 || String.valueOf(CEPaux).length() != 8) {
-            System.out.println("Digite um CEP Válido");
-            CEPaux = validarInputNumero();
+    public String validarCEP() {
+        StringAux = validarInputNumero("CEP");
+        while (StringAux.length() != 8) {
+            System.out.println("Digite um CEP válido");
+            StringAux = validarInputNumero("CEP");
         }
-        return CEPaux;
+        return StringAux;
     }
 
     public String validarEmail() {
@@ -270,14 +241,13 @@ public class Principal {
         return Emailaux;
     }
 
-    public long validarTelefone() {
-        telefoneAux = validarInputNumero();
-        while (telefoneAux == -1 || String.valueOf(telefoneAux).length() != 11) {
-            System.out.println("Digite um Numero Válido - Exemplo - 62912345678");
-            telefoneAux = validarInputNumero();
-            System.out.println(telefoneAux);
+    public String validarTelefone() {
+        StringAux = validarInputNumero("Número");
+        while (StringAux.length() != 11) {
+            System.out.println("Digite um Numero de celular válido - Exemplo - 62912345678");
+            StringAux = validarInputNumero("Número");
         }
-        return telefoneAux;
+        return StringAux;
     }
 
     public String printMenu() {
@@ -321,7 +291,7 @@ public class Principal {
             System.out.println("****** Selecione o ID que deseja Excluir ******");
             IDOpcao = validarIdSelecionado();
             controllerCadastros.excluir(IDOpcao, cadastroArray);
-            ID = cadastroArray.size();
+            ID = String.valueOf(cadastroArray.size());
         }
     }
 

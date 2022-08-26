@@ -8,13 +8,13 @@ import java.util.ArrayList;
 public class Input {
     private String nome;
     private String email;
-    private long cpf;
-    private long cep;
+    private String cpf;
+    private String cep;
     private String rua;
     private String cidade;
     private String nomeContatoPrincipal;
     private String emailContatoPrincipal;
-    private long telefoneContatoPrincipal;
+    private String telefoneContatoPrincipal;
     private ArrayList<Contato> arrayList;
 
     public ArrayList<Contato> getArrayList() {
@@ -42,11 +42,11 @@ public class Input {
         this.emailContatoPrincipal = emailContatoPrincipal;
     }
 
-    public long getTelefoneContatoPrincipal() {
+    public String getTelefoneContatoPrincipal() {
         return telefoneContatoPrincipal;
     }
 
-    public void setTelefoneContatoPrincipal(long telefoneContatoPrincipal) {
+    public void setTelefoneContatoPrincipal(String telefoneContatoPrincipal) {
         this.telefoneContatoPrincipal = telefoneContatoPrincipal;
     }
 
@@ -66,19 +66,19 @@ public class Input {
         this.email = email;
     }
 
-    public long getCpf() {
+    public String getCpf() {
         return cpf;
     }
 
-    public void setCpf(long cpf) {
+    public void setCpf(String cpf) {
         this.cpf = cpf;
     }
 
-    public long getCep() {
+    public String getCep() {
         return cep;
     }
 
-    public void setCep(long cep) {
+    public void setCep(String cep) {
         this.cep = cep;
     }
 
