@@ -1,3 +1,4 @@
+package MeuPacote;
 
 public class Endereço {
 	private String cidade;
