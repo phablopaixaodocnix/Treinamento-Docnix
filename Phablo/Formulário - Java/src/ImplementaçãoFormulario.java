@@ -20,7 +20,7 @@ public class ImplementaçãoFormulario {
 			switch(opção){
 				case 1:
 					formularios.add(FunçõesAuxiliares.preencherFormularioERetornalo(scanner));
-					break;
+				break;
 
 				case 2:
 					FunçõesAuxiliares.manipularATabela(formularios,scanner);

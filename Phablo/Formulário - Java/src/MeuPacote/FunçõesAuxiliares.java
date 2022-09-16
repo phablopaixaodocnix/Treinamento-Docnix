@@ -162,15 +162,33 @@ public abstract class FunçõesAuxiliares {
 		System.out.println();
 	}
 
-	private static void excluirFormularioDaTabela(ArrayList<Formulario> formularios , int formularioASerExcluído){
-		formularios.remove(formularioASerExcluído-1);
-	}
+	private static int excluirFormularioDaTabela(ArrayList<Formulario> formularios, Scanner scanner, Boolean excluirOuEditar){
 
-	private static boolean podeExcluirDaTabela(ArrayList<Formulario> formularios){
-		if(formularios.size()<=0) return false;
-		return true;
-	}
+		int formularioASerExcluído = 0;
+		if(!podeExcluirDaTabela(formularios)){
+			System.out.println("  Tabela vazia!");
+		}
+		else{
+			do{
+				String k;
+				if(excluirOuEditar) k = "excluir";
+				else k = "editar";
+				System.out.println("  Qual formulario deseja "+ k + "? (-1 para voltar ao menu anterior)");
+				formularioASerExcluído = scanner.nextInt(); scanner.nextLine();
+				if(formularioASerExcluído<1 || formularioASerExcluído > formularios.size()){
+					if(formularioASerExcluído == -1)
+						break;
+					else
+						System.out.println("  Formulário Inexistente");
+				}
+			}while(formularioASerExcluído<1 || formularioASerExcluído > formularios.size());
+			if(formularioASerExcluído != -1)
+				formularios.remove(formularioASerExcluído-1);
+		}
+		return formularioASerExcluído;
 
+	}
+	
 	public static void manipularATabela(ArrayList<Formulario> formularios ,Scanner scanner){
 		if(!podeExcluirDaTabela(formularios)){
 			System.out.println("  Tabela vazia! Nenhum formulário foi preenchido.");
@@ -185,28 +203,18 @@ public abstract class FunçõesAuxiliares {
 
 				switch(opção){
 					case 1:
-					if(!podeExcluirDaTabela(formularios)){
-						System.out.println("  Tabela vazia!");
-					}
-					else{
-						int formularioASerExcluído;
-						do{
-							System.out.println("  Qual formulario deseja excluir? (-1 para voltar ao menu anterior)");
-							formularioASerExcluído = scanner.nextInt(); scanner.nextLine();
-							if(formularioASerExcluído<1 || formularioASerExcluído > formularios.size()){
-								if(formularioASerExcluído == -1)
-									break;
-								else
-									System.out.println("  Formulário Inexistente");
-							}
-						}while(formularioASerExcluído<1 || formularioASerExcluído > formularios.size());
-						if(formularioASerExcluído != -1)
-							excluirFormularioDaTabela(formularios, formularioASerExcluído);
-					}
+						excluirFormularioDaTabela(formularios, scanner , true);
 					break;
 				
-					case 2:{}
-				
+					case 2:
+						int tamanhoAntesDeTentarExcluir = formularios.size();
+						int formularioASerEditado = excluirFormularioDaTabela(formularios, scanner , true);
+						int tamanhoDepoisDeTentarExcluir = formularios.size();
+						if(tamanhoDepoisDeTentarExcluir>tamanhoAntesDeTentarExcluir){
+							//edirtarFormularioDaTabela(formularios,formularioASerEditado,scanner);
+						}
+					break;
+					
 					case 3:
 					break;
 
@@ -214,8 +222,17 @@ public abstract class FunçõesAuxiliares {
 					System.out.println(" Opção Invalida");
 				}
 			}while(opção !=3);
-		
+			
 		}
+	}
+	
+	private void edirtarFormularioDaTabela(ArrayList<Formulario> formularios,int formularioASerEditado,Scanner scanner){
+		
+	}
+	
+	private static boolean podeExcluirDaTabela(ArrayList<Formulario> formularios){
+		if(formularios.size()<=0) return false;
+		return true;
 	}
 
 }
