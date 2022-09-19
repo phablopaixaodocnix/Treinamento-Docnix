@@ -78,9 +78,9 @@ public class Formulario implements AçõesContatos{
     System.out.println("  Email: "+ this.email);
     System.out.println();
     System.out.println("   Endereço");
-    System.out.println("  Cidade");
-    System.out.println("  Bairro");
-    System.out.println("  Rua");
+    System.out.println("  Cidade: "+ this.endereço.getCidade());
+    System.out.println("  Bairro: "+ this.endereço.getBairro());
+    System.out.println("  Rua: "+ this.endereço.getRua());
     System.out.println("  Quadra: "+ this.endereço.getQuadra()+"  Casa: "+ this.endereço.getCasa());
     System.out.println("  Cep: "+ this.endereço.getCep()+"  Lote: "+ this.endereço.getLote());
     System.out.println("  Numero: "+ this.endereço.getNumero()+"  UF: "+ this.endereço.getUf());

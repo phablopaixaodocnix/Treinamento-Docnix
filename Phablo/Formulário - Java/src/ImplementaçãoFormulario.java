@@ -28,6 +28,7 @@ public class ImplementaçãoFormulario {
 
 				default:
 				System.out.println(" Opção Invalida");
+				opção = 1;
 			}
 		}while(opção == 1 || opção == 2);
 		
