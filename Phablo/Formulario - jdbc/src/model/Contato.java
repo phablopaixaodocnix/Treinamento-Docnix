@@ -1,15 +1,42 @@
-package MeuPacote;
-
+package model;
 public class Contato {
+	private int id;
+
+	private int idFormulario;
 	private String nome;
 	private String telefone;
 	private String email;
-	
+
+	public Contato(int id,int idFormulario ,String nome, String telefone, String email) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.telefone = telefone;
+		this.email = email;
+		this.idFormulario = idFormulario;
+	}
+
 	public Contato(String nome, String telefone, String email) {
 		super();
 		this.nome = nome;
 		this.telefone = telefone;
 		this.email = email;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getIdFormulario() {
+		return idFormulario;
+	}
+
+	public void setIdFormulario(int idFormulario) {
+		this.idFormulario = idFormulario;
 	}
 
 	public String getNome() {
@@ -35,7 +62,5 @@ public class Contato {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	
-	
+
 }
