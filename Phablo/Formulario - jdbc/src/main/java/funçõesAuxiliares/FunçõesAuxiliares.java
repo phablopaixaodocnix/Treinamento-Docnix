@@ -3,7 +3,6 @@ package funçõesAuxiliares;
 import controller.ContatosController;
 import controller.EndereçosController;
 import controller.FormulariosController;
-import dao.FormularioDAO;
 import model.Contato;
 import model.Endereço;
 import model.Formulario;
@@ -447,8 +446,7 @@ public abstract class FunçõesAuxiliares {
 		return true;
 	}
 
-
-	public static ArrayList<Formulario> puxarOsDadosDoBancoParaOFormularioLocal(FormulariosController formulariosController ,EndereçosController endereçosController ,ContatosController contatosController){
+	public static ArrayList<Formulario> retornarFormularioComOsDadosExistentesNoBanco(FormulariosController formulariosController , EndereçosController endereçosController , ContatosController contatosController){
 		ArrayList<Formulario> f = formulariosController.listar();
 		ArrayList<Endereço> e = endereçosController.listar();
 		ArrayList<Contato> c = contatosController.listar();
@@ -472,5 +470,30 @@ public abstract class FunçõesAuxiliares {
 			contatosASeremAdicionadosNoFormulario = new ArrayList<>();
 		}
 		return f;
+	}
+
+	public static void preencherEEnviarUmFormularioParaOBanco(ArrayList<Formulario> formularios, FormulariosController formulariosController, EndereçosController endereçosController, ContatosController contatosController, Scanner scanner) {
+		//formulário preenchido no java
+		Formulario formulario = FunçõesAuxiliares.preencherFormularioERetornalo(scanner);
+
+		//formulario salvo no banco de dados e seu id é definido pelo retorno da função salvar para que fique de acordo com o que está no banco
+		formulario.setId(formulariosController.salvar(formulario));
+
+		//salvando o endereço e os contatos no banco
+		endereçosController.salvar(formulario.getEndereço(), formulario.getId());
+		for (int i = 0; i < formulario.getContatos().size(); i++) {
+			formulario.getContatos().get(i).setId(contatosController.salvar(formulario.getContatos().get(i), formulario.getId()));
+		}
+
+		//arrumando os id's do endereço e dos contatos para que fique de acordo com o banco
+		formulario.getEndereço().setIdFormulario(formulario.getId());
+		for (int i = 0; i < formulario.getContatos().size(); i++) {
+			formulario.getContatos().get(i).setIdFormulario(formulario.getId());
+		}
+		formularios.add(formulario);
+	}
+
+	public static void mostrarATabela_Editar_Excluir(ArrayList<Formulario> formularios, FormulariosController formulariosController, EndereçosController endereçosController, ContatosController contatosController, Scanner scanner) {
+		FunçõesAuxiliares.manipularATabela(formularios, formulariosController, endereçosController, contatosController, scanner);
 	}
 }
