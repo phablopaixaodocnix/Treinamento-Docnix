@@ -1,3 +1,3 @@
-/Querries manipulação do banco/
-/Formulario - JDBC/.idea/
-/Formulario - JDBC/target/
+QuerriesManipulaçãoDoBanco/
+Formulario-JDBC/.idea/
+Formulario-JDBC/target/

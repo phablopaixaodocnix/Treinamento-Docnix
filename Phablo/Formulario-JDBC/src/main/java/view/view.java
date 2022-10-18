@@ -1,24 +1,24 @@
 package view;
 
 import controller.ContatosController;
-import controller.EndereçosController;
+import controller.EnderecosController;
 import controller.FormulariosController;
-import funçõesAuxiliares.FunçõesAuxiliares;
+import funçõesAuxiliares.FuncoesAuxiliares;
 import model.Formulario;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static funçõesAuxiliares.FunçõesAuxiliares.mostrarATabela_Editar_Excluir;
-import static funçõesAuxiliares.FunçõesAuxiliares.preencherEEnviarUmFormularioParaOBanco;
+import static funçõesAuxiliares.FuncoesAuxiliares.mostrarATabela_Editar_Excluir;
+import static funçõesAuxiliares.FuncoesAuxiliares.preencherEEnviarUmFormularioParaOBanco;
 
 public class view {
     public static void main(String[] args) {
         ArrayList<Formulario> formularios;
         FormulariosController formulariosController = new FormulariosController();
-        EndereçosController endereçosController = new EndereçosController();
+        EnderecosController enderecosController = new EnderecosController();
         ContatosController contatosController = new ContatosController();
-        formularios = FunçõesAuxiliares.retornarFormularioComOsDadosExistentesNoBanco(formulariosController, endereçosController, contatosController);
+        formularios = FuncoesAuxiliares.retornarFormularioComOsDadosExistentesNoBanco(formulariosController, enderecosController, contatosController);
         try (Scanner scanner = new Scanner(System.in)) {
             int opção = 0;
             System.out.printf("\n\n");
@@ -32,12 +32,12 @@ public class view {
 
                 switch (opção) {
                     case 1:
-                        preencherEEnviarUmFormularioParaOBanco(formularios, formulariosController, endereçosController, contatosController, scanner);
+                        preencherEEnviarUmFormularioParaOBanco(formularios, formulariosController, enderecosController, contatosController, scanner);
                         break;
 
 
                     case 2:
-                        mostrarATabela_Editar_Excluir(formularios, formulariosController, endereçosController, contatosController, scanner);
+                        mostrarATabela_Editar_Excluir(formularios, formulariosController, enderecosController, contatosController, scanner);
                         break;
 
 

@@ -1,7 +1,7 @@
 package funçõesAuxiliares;
 
 import controller.ContatosController;
-import controller.EndereçosController;
+import controller.EnderecosController;
 import controller.FormulariosController;
 import model.Contato;
 import model.Endereço;
@@ -11,7 +11,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
-public abstract class FunçõesAuxiliares {
+public abstract class FuncoesAuxiliares {
 
 	public static boolean isCPF(String CPF) {
 
@@ -98,7 +98,7 @@ public abstract class FunçõesAuxiliares {
 		do {
 			System.out.printf("  Cpf(Apenas números): ");
 			cpf = scanner.nextLine();
-			isValid = FunçõesAuxiliares.isCPF(cpf);
+			isValid = FuncoesAuxiliares.isCPF(cpf);
 			if (cpf.length() != 11) {
 				System.out.println("   O cpf deve conter exatamente 11 dígitos");
 			} else if (!isValid)
@@ -182,8 +182,8 @@ public abstract class FunçõesAuxiliares {
 		System.out.println();
 	}
 
-	private static int excluirFormularioDaTabela(ArrayList<Formulario> formularios,FormulariosController formulariosController, EndereçosController endereçosController, ContatosController contatosController, Scanner scanner,
-			Boolean excluirOuEditar) {
+	private static int excluirFormularioDaTabela(ArrayList<Formulario> formularios, FormulariosController formulariosController, EnderecosController enderecosController, ContatosController contatosController, Scanner scanner,
+												 Boolean excluirOuEditar) {
 
 		int formularioASerExcluído = 0;
 		if (!podeExcluirDaTabela(formularios)) {
@@ -215,7 +215,7 @@ public abstract class FunçõesAuxiliares {
 
 	}
 
-	public static void manipularATabela(ArrayList<Formulario> formularios, FormulariosController formulariosController, EndereçosController endereçosController, ContatosController contatosController, Scanner scanner) {
+	public static void manipularATabela(ArrayList<Formulario> formularios, FormulariosController formulariosController, EnderecosController enderecosController, ContatosController contatosController, Scanner scanner) {
 		if (!podeExcluirDaTabela(formularios)) {
 			System.out.println("  Tabela vazia! Nenhum formulário foi preenchido.");
 		}
@@ -230,11 +230,11 @@ public abstract class FunçõesAuxiliares {
 
 				switch (opção) {
 					case 1:
-						excluirFormularioDaTabela(formularios,formulariosController,endereçosController,contatosController, scanner, true);
+						excluirFormularioDaTabela(formularios,formulariosController, enderecosController,contatosController, scanner, true);
 						break;
 
 					case 2:
-						edirtarFormularioDaTabela(formularios,formulariosController,endereçosController,contatosController, scanner);
+						edirtarFormularioDaTabela(formularios,formulariosController, enderecosController,contatosController, scanner);
 						break;
 
 					case 3:
@@ -263,7 +263,7 @@ public abstract class FunçõesAuxiliares {
 		formularios.get(i - 1).imprimirFormulario();
 	}
 
-	private static void edirtarFormularioDaTabela(ArrayList<Formulario> formularios,FormulariosController formulariosController, EndereçosController endereçosController, ContatosController contatosController, Scanner scanner) {
+	private static void edirtarFormularioDaTabela(ArrayList<Formulario> formularios, FormulariosController formulariosController, EnderecosController enderecosController, ContatosController contatosController, Scanner scanner) {
 		int formularioASerEditado = 0;
 		boolean precisaEditarATabelaFormularios=false,precisaEditarATabelaEndereço=false,precisaEditarATabelaContatos=false;
 		do {
@@ -434,7 +434,7 @@ public abstract class FunçõesAuxiliares {
 		if(precisaEditarATabelaFormularios) {
 			formulariosController.editar(formularioParaEditar.getId(), formularioParaEditar);
 		}if(precisaEditarATabelaEndereço) {
-			endereçosController.editar(formularioParaEditar.getId(), formularioParaEditar.getEndereço());
+			enderecosController.editar(formularioParaEditar.getId(), formularioParaEditar.getEndereço());
 		}if(precisaEditarATabelaContatos) {
 			contatosController.editar(formularioParaEditar.getContatos().get(opçãoContatos - 1).getId(), formularioParaEditar.getContatos().get(opçãoContatos - 1));
 		}
@@ -446,9 +446,9 @@ public abstract class FunçõesAuxiliares {
 		return true;
 	}
 
-	public static ArrayList<Formulario> retornarFormularioComOsDadosExistentesNoBanco(FormulariosController formulariosController , EndereçosController endereçosController , ContatosController contatosController){
+	public static ArrayList<Formulario> retornarFormularioComOsDadosExistentesNoBanco(FormulariosController formulariosController , EnderecosController enderecosController, ContatosController contatosController){
 		ArrayList<Formulario> f = formulariosController.listar();
-		ArrayList<Endereço> e = endereçosController.listar();
+		ArrayList<Endereço> e = enderecosController.listar();
 		ArrayList<Contato> c = contatosController.listar();
 		ArrayList<Contato> contatosASeremAdicionadosNoFormulario = new ArrayList<Contato>();
 
@@ -472,15 +472,15 @@ public abstract class FunçõesAuxiliares {
 		return f;
 	}
 
-	public static void preencherEEnviarUmFormularioParaOBanco(ArrayList<Formulario> formularios, FormulariosController formulariosController, EndereçosController endereçosController, ContatosController contatosController, Scanner scanner) {
+	public static void preencherEEnviarUmFormularioParaOBanco(ArrayList<Formulario> formularios, FormulariosController formulariosController, EnderecosController enderecosController, ContatosController contatosController, Scanner scanner) {
 		//formulário preenchido no java
-		Formulario formulario = FunçõesAuxiliares.preencherFormularioERetornalo(scanner);
+		Formulario formulario = FuncoesAuxiliares.preencherFormularioERetornalo(scanner);
 
 		//formulario salvo no banco de dados e seu id é definido pelo retorno da função salvar para que fique de acordo com o que está no banco
 		formulario.setId(formulariosController.salvar(formulario));
 
 		//salvando o endereço e os contatos no banco
-		endereçosController.salvar(formulario.getEndereço(), formulario.getId());
+		enderecosController.salvar(formulario.getEndereço(), formulario.getId());
 		for (int i = 0; i < formulario.getContatos().size(); i++) {
 			formulario.getContatos().get(i).setId(contatosController.salvar(formulario.getContatos().get(i), formulario.getId()));
 		}
@@ -493,7 +493,7 @@ public abstract class FunçõesAuxiliares {
 		formularios.add(formulario);
 	}
 
-	public static void mostrarATabela_Editar_Excluir(ArrayList<Formulario> formularios, FormulariosController formulariosController, EndereçosController endereçosController, ContatosController contatosController, Scanner scanner) {
-		FunçõesAuxiliares.manipularATabela(formularios, formulariosController, endereçosController, contatosController, scanner);
+	public static void mostrarATabela_Editar_Excluir(ArrayList<Formulario> formularios, FormulariosController formulariosController, EnderecosController enderecosController, ContatosController contatosController, Scanner scanner) {
+		FuncoesAuxiliares.manipularATabela(formularios, formulariosController, enderecosController, contatosController, scanner);
 	}
 }

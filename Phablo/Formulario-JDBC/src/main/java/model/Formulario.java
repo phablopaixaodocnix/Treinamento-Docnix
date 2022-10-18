@@ -2,7 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
-public class Formulario implements AçõesContatos {
+public class Formulario implements AcoesContatos {
   private int id;
   private String nome, email, cpf;
   private  String escolaridade;
