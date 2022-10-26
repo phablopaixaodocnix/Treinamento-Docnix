@@ -1,10 +1,10 @@
-package funçõesAuxiliares;
+package funcoesAuxiliares;
 
 import controller.ContatosController;
 import controller.EnderecosController;
 import controller.FormulariosController;
 import model.Contato;
-import model.Endereço;
+import model.Endereco;
 import model.Formulario;
 
 import java.util.InputMismatchException;
@@ -83,7 +83,7 @@ public abstract class FuncoesAuxiliares {
 
 	public static Formulario preencherFormularioERetornalo(Scanner scanner) {
 		String nome, email, cpf = "11111111111", cidade, bairro, rua, uf, escolaridade = "", cep;
-		int quadra, casa, lote, numero, opçãoContatos = 0;
+		int quadra, casa, lote, numero, opcaoContatos = 0;
 		ArrayList<Contato> contatos = new ArrayList<Contato>();
 		System.out
 				.printf(" Preenchendo formulário " + (Formulario.quantidadeTotalDeFormularios + 1) + "\n\n\tDados Pessoais");
@@ -105,7 +105,7 @@ public abstract class FuncoesAuxiliares {
 				System.out.println("   Cpf Invalido!!");
 		} while (!isValid || cpf.length() != 11);
 
-		boolean condição = false;
+		boolean condicao = false;
 		do {
 			System.out.printf("  Escolaridade:  (1) Ensino Fundamental  (2) Ensino Médio  (3) Ensino Superior    ");
 			int a = scanner.nextInt();
@@ -116,10 +116,10 @@ public abstract class FuncoesAuxiliares {
 				escolaridade = "ensino médio";
 			else if (a == 3)
 				escolaridade = "ensino superior";
-			condição = (((a == 1) || (a == 2)) || (a == 3));
-		} while (!condição);
+			condicao = (((a == 1) || (a == 2)) || (a == 3));
+		} while (!condicao);
 
-		System.out.printf("\n\tEndereço\n  UF: ");
+		System.out.printf("\n\tEndereco\n  UF: ");
 		uf = scanner.nextLine();
 
 		System.out.printf("  Cidade: ");
@@ -148,7 +148,7 @@ public abstract class FuncoesAuxiliares {
 		scanner.nextLine();
 
 		System.out.printf("\n\tContatos\n");
-		for (int i = 0; opçãoContatos != 2; i++) {
+		for (int i = 0; opcaoContatos != 2; i++) {
 			String nomeContato, telefoneContato, emailContato;
 			System.out.println("   Contato " + (i + 1));
 			System.out.printf("  Nome: ");
@@ -159,18 +159,18 @@ public abstract class FuncoesAuxiliares {
 			emailContato = scanner.nextLine();
 			if (i >= 1) {
 				do {
-					System.out.printf("   Mais um contato?  (1) Sim  (2) Não  ");
-					opçãoContatos = scanner.nextInt();
+					System.out.printf("   Mais um contato?  (1) Sim  (2) Nao  ");
+					opcaoContatos = scanner.nextInt();
 					scanner.nextLine();
-					if (opçãoContatos != 1 && opçãoContatos != 2)
-						System.out.printf("   Opção inválida");
-				} while (opçãoContatos != 1 && opçãoContatos != 2);
+					if (opcaoContatos != 1 && opcaoContatos != 2)
+						System.out.printf("   Opcao inválida");
+				} while (opcaoContatos != 1 && opcaoContatos != 2);
 			}
 			contatos.add(new Contato(nomeContato, telefoneContato, emailContato));
 		}
 		System.out.println("   Formulário enviado com sucesso!!\n");
 
-		return new Formulario(nome, email, cpf, new Endereço(cidade, bairro, rua, quadra, casa, cep, lote, numero, uf),
+		return new Formulario(nome, email, cpf, new Endereco(cidade, bairro, rua, quadra, casa, cep, lote, numero, uf),
 				escolaridade, contatos);
 	}
 
@@ -220,15 +220,15 @@ public abstract class FuncoesAuxiliares {
 			System.out.println("  Tabela vazia! Nenhum formulário foi preenchido.");
 		}
 		else {
-			int opção;
+			int opcao;
 			do {
 				construirATabela(formularios);
 				System.out.println(
 						"  O que deseja fazer?  (1) Excluir formulario da tabela  (2) Editar formulario  (3) Mostrar todos os dados de um formulário  (4) Voltar ao menu anterior  ");
-				opção = scanner.nextInt();
+				opcao = scanner.nextInt();
 				scanner.nextLine();
 
-				switch (opção) {
+				switch (opcao) {
 					case 1:
 						excluirFormularioDaTabela(formularios,formulariosController, enderecosController,contatosController, scanner, true);
 						break;
@@ -245,9 +245,9 @@ public abstract class FuncoesAuxiliares {
 						break;
 
 					default:
-						System.out.println(" Opção Invalida");
+						System.out.println(" Opcao Invalida");
 				}
-			} while (opção < 1 || opção > 4);
+			} while (opcao < 1 || opcao > 4);
 
 		}
 	}
@@ -265,7 +265,7 @@ public abstract class FuncoesAuxiliares {
 
 	private static void edirtarFormularioDaTabela(ArrayList<Formulario> formularios, FormulariosController formulariosController, EnderecosController enderecosController, ContatosController contatosController, Scanner scanner) {
 		int formularioASerEditado = 0;
-		boolean precisaEditarATabelaFormularios=false,precisaEditarATabelaEndereço=false,precisaEditarATabelaContatos=false;
+		boolean precisaEditarATabelaFormularios=false,precisaEditarATabelaEndereco=false,precisaEditarATabelaContatos=false;
 		do {
 			System.out.println("  Qual formulário deseja editar? ");
 			formularioASerEditado = scanner.nextInt();
@@ -276,20 +276,20 @@ public abstract class FuncoesAuxiliares {
 
 		Formulario formularioParaEditar = formularios.get(formularioASerEditado - 1);
 		formularioParaEditar.imprimirFormulario();
-		int opção = 0, opçãoEndereço = 0, opçãoContatos = 0;
+		int opcao = 0, opcaoEndereco = 0, opcaoContatos = 0;
 		do {
 			System.out.println("\n  O que deseja editar? ");
 			System.out.println("  (1) Nome");
 			System.out.println("  (2) Email");
 			System.out.println("  (3) Cpf");
-			System.out.println("  (4) Endereço");
+			System.out.println("  (4) Endereco");
 			System.out.println("  (5) Contatos");
 			System.out.println("  (6) Voltar ao menu anterior");
-			System.out.println("  Informe a opção desejada: ");
-			opção = scanner.nextInt();
+			System.out.println("  Informe a opcao desejada: ");
+			opcao = scanner.nextInt();
 			scanner.nextLine();
 
-			switch (opção) {
+			switch (opcao) {
 				case 1:
 					System.out.println("  Informe o novo nome: ");
 					formularioParaEditar.setNome(scanner.nextLine());
@@ -331,66 +331,66 @@ public abstract class FuncoesAuxiliares {
 						System.out.println("   (7) lote");
 						System.out.println("   (8) numero");
 						System.out.println("   (9) uf");
-						System.out.println("   Informe a opção desejada: ");
-						opçãoEndereço = scanner.nextInt();
+						System.out.println("   Informe a opcao desejada: ");
+						opcaoEndereco = scanner.nextInt();
 						scanner.nextLine();
 
-						switch (opçãoEndereço) {
+						switch (opcaoEndereco) {
 							case 1:
 								System.out.println("  Informe a nova cidade: ");
-								formularioParaEditar.getEndereço().setCidade(scanner.nextLine());
+								formularioParaEditar.getEndereco().setCidade(scanner.nextLine());
 								System.out.println("  Cidade editado com sucesso!!");
 								break;
 							case 2:
 								System.out.println("  Informe o novo bairro: ");
-								formularioParaEditar.getEndereço().setBairro(scanner.nextLine());
+								formularioParaEditar.getEndereco().setBairro(scanner.nextLine());
 								System.out.println("  Bairro editado com sucesso!!");
 								break;
 							case 3:
 								System.out.println("  Informe a nova rua: ");
-								formularioParaEditar.getEndereço().setRua(scanner.nextLine());
+								formularioParaEditar.getEndereco().setRua(scanner.nextLine());
 								System.out.println("  Rua editado com sucesso!!");
 								break;
 							case 4:
 								System.out.println("  Informe a nova quadra: ");
-								formularioParaEditar.getEndereço().setQuadra(scanner.nextInt());
+								formularioParaEditar.getEndereco().setQuadra(scanner.nextInt());
 								scanner.nextLine();
 								System.out.println("  Quadra editado com sucesso!!");
 								break;
 							case 5:
 								System.out.println("  Informe a nova casa: ");
-								formularioParaEditar.getEndereço().setCasa(scanner.nextInt());
+								formularioParaEditar.getEndereco().setCasa(scanner.nextInt());
 								scanner.nextInt();
 								System.out.println("  Casa editado com sucesso!!");
 								break;
 							case 6:
 								System.out.println("  Informe o novo cep: ");
-								formularioParaEditar.getEndereço().setCep(scanner.next());
+								formularioParaEditar.getEndereco().setCep(scanner.next());
 								scanner.nextLine();
 								System.out.println("  Cep editado com sucesso!!");
 								break;
 							case 7:
 								System.out.println("  Informe o novo lote: ");
-								formularioParaEditar.getEndereço().setLote(scanner.nextInt());
+								formularioParaEditar.getEndereco().setLote(scanner.nextInt());
 								scanner.nextLine();
 								System.out.println("  Lote editado com sucesso!!");
 								break;
 							case 8:
 								System.out.println("  Informe o novo numero: ");
-								formularioParaEditar.getEndereço().setNumero(scanner.nextInt());
+								formularioParaEditar.getEndereco().setNumero(scanner.nextInt());
 								scanner.nextLine();
 								System.out.println("  Numero editado com sucesso!!");
 								break;
 							case 9:
 								System.out.println("  Informe o novo estado: ");
-								formularioParaEditar.getEndereço().setUf(scanner.nextLine());
+								formularioParaEditar.getEndereco().setUf(scanner.nextLine());
 								System.out.println("  Numero editado com sucesso!!");
 								break;
 							default:
-								System.out.println("  Opção invalida!!");
+								System.out.println("  Opcao invalida!!");
 						}////
-					} while (opçãoEndereço < 1 || opçãoEndereço > 9);
-					precisaEditarATabelaEndereço = true;
+					} while (opcaoEndereco < 1 || opcaoEndereco > 9);
+					precisaEditarATabelaEndereco = true;
 					break;
 				}
 
@@ -398,9 +398,9 @@ public abstract class FuncoesAuxiliares {
 
 					do {
 						System.out.println("  Qual contato deseja editar?");
-						opçãoContatos = scanner.nextInt();
+						opcaoContatos = scanner.nextInt();
 						scanner.nextLine();
-						if (opçãoContatos < 1 || opçãoContatos > formularioParaEditar.getContatos().size()) {
+						if (opcaoContatos < 1 || opcaoContatos > formularioParaEditar.getContatos().size()) {
 							System.out.println("  Contato Inválido");
 							break;
 						} else {
@@ -410,9 +410,9 @@ public abstract class FuncoesAuxiliares {
 							String email = scanner.nextLine();
 							System.out.println("  Informe o novo telefone: ");
 							String telefone = scanner.nextLine();
-							formularioParaEditar.getContatos().set(opçãoContatos - 1, new Contato(formularioParaEditar.getContatos().get(opçãoContatos - 1).getId(), formularioParaEditar.getContatos().get(opçãoContatos - 1).getIdFormulario(), nome, telefone, email));
+							formularioParaEditar.getContatos().set(opcaoContatos - 1, new Contato(formularioParaEditar.getContatos().get(opcaoContatos - 1).getId(), formularioParaEditar.getContatos().get(opcaoContatos - 1).getIdFormulario(), nome, telefone, email));
 						}
-					} while (opçãoContatos < 1 || opçãoContatos > formularioParaEditar.getContatos().size());
+					} while (opcaoContatos < 1 || opcaoContatos > formularioParaEditar.getContatos().size());
 					precisaEditarATabelaContatos=true;
 				break;
 				}
@@ -421,22 +421,22 @@ public abstract class FuncoesAuxiliares {
 					break;
 
 				default:
-					System.out.println("	Opção Inválida");
+					System.out.println("	Opcao Inválida");
 			}
 
-			if (opção == 6)
+			if (opcao == 6)
 				break;
 
-		} while (opção < 1 || opção > 6);
+		} while (opcao < 1 || opcao > 6);
 
 		formularios.set(formularioASerEditado - 1,formularioParaEditar);
 
 		if(precisaEditarATabelaFormularios) {
 			formulariosController.editar(formularioParaEditar.getId(), formularioParaEditar);
-		}if(precisaEditarATabelaEndereço) {
-			enderecosController.editar(formularioParaEditar.getId(), formularioParaEditar.getEndereço());
+		}if(precisaEditarATabelaEndereco) {
+			enderecosController.editar(formularioParaEditar.getId(), formularioParaEditar.getEndereco());
 		}if(precisaEditarATabelaContatos) {
-			contatosController.editar(formularioParaEditar.getContatos().get(opçãoContatos - 1).getId(), formularioParaEditar.getContatos().get(opçãoContatos - 1));
+			contatosController.editar(formularioParaEditar.getContatos().get(opcaoContatos - 1).getId(), formularioParaEditar.getContatos().get(opcaoContatos - 1));
 		}
 	}
 
@@ -448,14 +448,14 @@ public abstract class FuncoesAuxiliares {
 
 	public static ArrayList<Formulario> retornarFormularioComOsDadosExistentesNoBanco(FormulariosController formulariosController , EnderecosController enderecosController, ContatosController contatosController){
 		ArrayList<Formulario> f = formulariosController.listar();
-		ArrayList<Endereço> e = enderecosController.listar();
+		ArrayList<Endereco> e = enderecosController.listar();
 		ArrayList<Contato> c = contatosController.listar();
 		ArrayList<Contato> contatosASeremAdicionadosNoFormulario = new ArrayList<Contato>();
 
 		for(int i = 0; i < f.size();i++){
 			for (int k = 0 ; k < e.size();k++) {
 				if (f.get(i).getId() == e.get(k).getIdFormulario()) {
-					f.get(i).setEndereço(e.get(k));
+					f.get(i).setEndereco(e.get(k));
 				}
 			}
 		}
@@ -476,17 +476,17 @@ public abstract class FuncoesAuxiliares {
 		//formulário preenchido no java
 		Formulario formulario = FuncoesAuxiliares.preencherFormularioERetornalo(scanner);
 
-		//formulario salvo no banco de dados e seu id é definido pelo retorno da função salvar para que fique de acordo com o que está no banco
+		//formulario salvo no banco de dados e seu id é definido pelo retorno da funcao salvar para que fique de acordo com o que está no banco
 		formulario.setId(formulariosController.salvar(formulario));
 
-		//salvando o endereço e os contatos no banco
-		enderecosController.salvar(formulario.getEndereço(), formulario.getId());
+		//salvando o endereco e os contatos no banco
+		enderecosController.salvar(formulario.getEndereco(), formulario.getId());
 		for (int i = 0; i < formulario.getContatos().size(); i++) {
 			formulario.getContatos().get(i).setId(contatosController.salvar(formulario.getContatos().get(i), formulario.getId()));
 		}
 
-		//arrumando os id's do endereço e dos contatos para que fique de acordo com o banco
-		formulario.getEndereço().setIdFormulario(formulario.getId());
+		//arrumando os id's do endereco e dos contatos para que fique de acordo com o banco
+		formulario.getEndereco().setIdFormulario(formulario.getId());
 		for (int i = 0; i < formulario.getContatos().size(); i++) {
 			formulario.getContatos().get(i).setIdFormulario(formulario.getId());
 		}

@@ -1,6 +1,6 @@
 package dao;
 
-import model.Endereço;
+import model.Endereco;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,9 +15,9 @@ public class EnderecoDAO {
         this.connection = connection;
     }
 
-    public ArrayList<Endereço> listar() {
-        ArrayList<Endereço> endereços = new ArrayList<Endereço>();
-        String sqlStatment = "SELECT * FROM endereços;";
+    public ArrayList<Endereco> listar() {
+        ArrayList<Endereco> enderecos = new ArrayList<Endereco>();
+        String sqlStatment = "SELECT * FROM enderecos;";
         try(PreparedStatement pstm = connection.prepareStatement(sqlStatment)) {
             pstm.execute();
             try (ResultSet rst = pstm.getResultSet()) {
@@ -32,10 +32,10 @@ public class EnderecoDAO {
                             lote = rst.getInt("lote"),
                             numero = rst.getInt("numero"),
                             idFormulario = rst.getInt("idformulario");
-                    endereços.add(new Endereço(idFormulario,cidade, bairro, rua, quadra, casa, cep, lote, numero, uf));
+                    enderecos.add(new Endereco(idFormulario,cidade, bairro, rua, quadra, casa, cep, lote, numero, uf));
                 }
             }
-            return endereços;
+            return enderecos;
         }
         catch (SQLException e){
             System.out.println("Deu ruim");
@@ -44,33 +44,33 @@ public class EnderecoDAO {
         }
     }
 
-    public int salvarEndereçoERetornarID(Endereço endereço, int id){
-        String slq = "INSERT INTO endereços(uf,cidade,bairro,rua,quadra,casa,lote,numero,cep,idFormulario) VALUES(?,?,?,?,?,?,?,?,?,?);";
-        int idEndereço=0;
+    public int salvarEnderecoERetornarID(Endereco endereco, int id){
+        String slq = "INSERT INTO enderecos(uf,cidade,bairro,rua,quadra,casa,lote,numero,cep,idFormulario) VALUES(?,?,?,?,?,?,?,?,?,?);";
+        int idEndereco=0;
         try(PreparedStatement pstm = connection.prepareStatement(slq)){
-            pstm.setString(1,endereço.getUf());
-            pstm.setString(2,endereço.getCidade());
-            pstm.setString(3,endereço.getBairro());
-            pstm.setString(4,endereço.getRua());
-            pstm.setInt(5,endereço.getQuadra());
-            pstm.setInt(6,endereço.getCasa());
-            pstm.setInt(7,endereço.getLote());
-            pstm.setInt(8,endereço.getNumero());
-            pstm.setString(9,endereço.getCep());
+            pstm.setString(1,endereco.getUf());
+            pstm.setString(2,endereco.getCidade());
+            pstm.setString(3,endereco.getBairro());
+            pstm.setString(4,endereco.getRua());
+            pstm.setInt(5,endereco.getQuadra());
+            pstm.setInt(6,endereco.getCasa());
+            pstm.setInt(7,endereco.getLote());
+            pstm.setInt(8,endereco.getNumero());
+            pstm.setString(9,endereco.getCep());
             pstm.setInt(10,id);
             pstm.execute();
           try(ResultSet rst = pstm.getGeneratedKeys()){
-               while (rst.next()) idEndereço = rst.getInt("id");
+               while (rst.next()) idEndereco = rst.getInt("id");
            }
         }catch (SQLException e){
             System.out.println("Deu ruim");
             e.printStackTrace();
         }
-        return idEndereço;
+        return idEndereco;
     }
 
     public void excluir(int id){
-        String slq = "DELETE FROM endereços WHERE id = ?;";
+        String slq = "DELETE FROM enderecos WHERE id = ?;";
         try(PreparedStatement pstm = connection.prepareStatement(slq)){
             pstm.setInt(1,id);
             pstm.execute();
@@ -80,20 +80,20 @@ public class EnderecoDAO {
         }
     }
 
-    public void editar(int id, Endereço endereço){
-        String sql = "UPDATE endereços" +
+    public void editar(int id, Endereco endereco){
+        String sql = "UPDATE enderecos" +
                      " SET uf = ? ,cidade = ?  ,bairro = ? ,rua = ? ,quadra = ? ,casa = ? ,lote = ? ,numero = ? ,cep = ?" +
                      " WHERE idformulario = ?;";
         try(PreparedStatement pstm = connection.prepareStatement(sql)){
-            pstm.setString(1,endereço.getUf());
-            pstm.setString(2,endereço.getCidade());
-            pstm.setString(3,endereço.getBairro());
-            pstm.setString(4,endereço.getRua());
-            pstm.setInt(5,endereço.getQuadra());
-            pstm.setInt(6,endereço.getCasa());
-            pstm.setInt(7,endereço.getLote());
-            pstm.setInt(8,endereço.getNumero());
-            pstm.setString(9,endereço.getCep());
+            pstm.setString(1,endereco.getUf());
+            pstm.setString(2,endereco.getCidade());
+            pstm.setString(3,endereco.getBairro());
+            pstm.setString(4,endereco.getRua());
+            pstm.setInt(5,endereco.getQuadra());
+            pstm.setInt(6,endereco.getCasa());
+            pstm.setInt(7,endereco.getLote());
+            pstm.setInt(8,endereco.getNumero());
+            pstm.setString(9,endereco.getCep());
             pstm.setInt(10,id);
             pstm.execute();
         }catch (SQLException e){

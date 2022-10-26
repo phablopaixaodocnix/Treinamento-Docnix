@@ -1,5 +1,3 @@
-
-
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.ArrayList;

@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionFactory {
-  public Connection recuperarConexãoComBancoDeDados(){
+  public Connection recuperarConexaoComBancoDeDados(){
 	try {
 		return DriverManager.getConnection("jdbc:postgresql://localhost:5432/Desafio Formulário", "postgres", "postgres");
 	}catch(SQLException e) {

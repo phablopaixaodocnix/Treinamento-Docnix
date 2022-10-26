@@ -10,7 +10,7 @@ public class ContatosController {
     private ContatosDAO contatosDAO = null;
 
     public ContatosController(){
-        this.contatosDAO = new ContatosDAO( new ConnectionFactory().recuperarConexãoComBancoDeDados());
+        this.contatosDAO = new ContatosDAO( new ConnectionFactory().recuperarConexaoComBancoDeDados());
     }
 
     public ArrayList<Contato> listar(){

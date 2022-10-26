@@ -10,7 +10,7 @@ public class FormulariosController {
     private FormularioDAO formularioDAO = null;
 
     public FormulariosController(){
-        this.formularioDAO = new FormularioDAO(new ConnectionFactory().recuperarConexãoComBancoDeDados());
+        this.formularioDAO = new FormularioDAO(new ConnectionFactory().recuperarConexaoComBancoDeDados());
     }
 
     public ArrayList<Formulario> listar(){

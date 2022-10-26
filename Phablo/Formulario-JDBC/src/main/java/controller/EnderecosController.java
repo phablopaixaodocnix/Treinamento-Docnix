@@ -2,7 +2,7 @@ package controller;
 
 import dao.ConnectionFactory;
 import dao.EnderecoDAO;
-import model.Endereço;
+import model.Endereco;
 
 import java.util.ArrayList;
 
@@ -10,23 +10,23 @@ public class EnderecosController {
     private EnderecoDAO enderecoDAO = null;
 
     public EnderecosController(){
-        this.enderecoDAO = new EnderecoDAO(new ConnectionFactory().recuperarConexãoComBancoDeDados());
+        this.enderecoDAO = new EnderecoDAO(new ConnectionFactory().recuperarConexaoComBancoDeDados());
     }
 
-    public ArrayList<Endereço> listar(){
+    public ArrayList<Endereco> listar(){
         return enderecoDAO.listar();
     }
 
-    public int salvar(Endereço endereço, int id){
-        return enderecoDAO.salvarEndereçoERetornarID(endereço,id);
+    public int salvar(Endereco endereco, int id){
+        return enderecoDAO.salvarEnderecoERetornarID(endereco,id);
     }
 
     public void excluir(int id){
         enderecoDAO.excluir(id);
     }
 
-    public void editar(int id, Endereço endereço){
-        enderecoDAO.editar(id,endereço);
+    public void editar(int id, Endereco endereco){
+        enderecoDAO.editar(id,endereco);
     }
 
 

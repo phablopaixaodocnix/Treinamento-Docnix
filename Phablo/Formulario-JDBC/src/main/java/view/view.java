@@ -3,14 +3,14 @@ package view;
 import controller.ContatosController;
 import controller.EnderecosController;
 import controller.FormulariosController;
-import funçõesAuxiliares.FuncoesAuxiliares;
+import funcoesAuxiliares.FuncoesAuxiliares;
 import model.Formulario;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static funçõesAuxiliares.FuncoesAuxiliares.mostrarATabela_Editar_Excluir;
-import static funçõesAuxiliares.FuncoesAuxiliares.preencherEEnviarUmFormularioParaOBanco;
+import static funcoesAuxiliares.FuncoesAuxiliares.mostrarATabela_Editar_Excluir;
+import static funcoesAuxiliares.FuncoesAuxiliares.preencherEEnviarUmFormularioParaOBanco;
 
 public class view {
     public static void main(String[] args) {
@@ -20,17 +20,17 @@ public class view {
         ContatosController contatosController = new ContatosController();
         formularios = FuncoesAuxiliares.retornarFormularioComOsDadosExistentesNoBanco(formulariosController, enderecosController, contatosController);
         try (Scanner scanner = new Scanner(System.in)) {
-            int opção = 0;
+            int opcao = 0;
             System.out.printf("\n\n");
             System.out.println("-----------------------------------Desafio Formulário em Java-----------------------------------");
 
             do {
                 System.out.printf(" O que deseja fazer?  (1)Preencher e enviar um formulário  (2) Mostrar a tabela		");
-                opção = scanner.nextInt();
+                opcao = scanner.nextInt();
                 scanner.nextLine();
                 System.out.println();
 
-                switch (opção) {
+                switch (opcao) {
                     case 1:
                         preencherEEnviarUmFormularioParaOBanco(formularios, formulariosController, enderecosController, contatosController, scanner);
                         break;
@@ -42,10 +42,10 @@ public class view {
 
 
                     default:
-                        System.out.println(" Opção Invalida");
-                        opção = 1;
+                        System.out.println(" Opcao Invalida");
+                        opcao = 1;
                 }
-            } while (opção == 1 || opção == 2);
+            } while (opcao == 1 || opcao == 2);
 
         }
     }

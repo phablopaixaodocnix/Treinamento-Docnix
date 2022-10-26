@@ -1,5 +1,5 @@
 package model;
-public class Endereço {
+public class Endereco {
 	private int idFormulario;
 	private String cidade;
 	private String bairro;
@@ -11,11 +11,11 @@ public class Endereço {
 	private int numero;
 	private String uf;
 
-	public Endereço() {
+	public Endereco() {
 	}
 
-	public Endereço(int idFormulario, String cidade, String bairro, String rua, int quadra, int casa, String cep, int lote, int numero,
-			String uf) {
+	public Endereco(int idFormulario, String cidade, String bairro, String rua, int quadra, int casa, String cep, int lote, int numero,
+					String uf) {
 		super();
 		this.cidade = cidade;
 		this.bairro = bairro;
@@ -29,7 +29,7 @@ public class Endereço {
 		this.idFormulario = idFormulario;
 	}
 
-	public Endereço(String cidade, String bairro, String rua, int quadra, int casa, String cep, int lote, int numero,
+	public Endereco(String cidade, String bairro, String rua, int quadra, int casa, String cep, int lote, int numero,
 					String uf) {
 		super();
 		this.cidade = cidade;
