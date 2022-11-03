@@ -185,8 +185,8 @@ public abstract class FuncoesAuxiliares {
         System.out.println();
     }
 
-    private static void excluirFormularioDaTabela(List<Formulario> formularios,FormularioController formularioController, Scanner scanner,
-                                                 Boolean excluirOuEditar) {
+    private static void excluirFormularioDaTabela(List<Formulario> formularios, FormularioController formularioController, Scanner scanner,
+                                                  Boolean excluirOuEditar) {
 
         int formularioASerExcluído = 0;
         if (!podeExcluirDaTabela(formularios)) {
@@ -216,7 +216,7 @@ public abstract class FuncoesAuxiliares {
 
     }
 
-    public static void manipularATabela(List<Formulario> formularios,FormularioController formularioController, Scanner scanner) {
+    public static void manipularATabela(List<Formulario> formularios, FormularioController formularioController, Scanner scanner) {
         if (!podeExcluirDaTabela(formularios)) {
             System.out.println("  Tabela vazia! Nenhum formulário foi preenchido.");
         } else {
@@ -264,7 +264,7 @@ public abstract class FuncoesAuxiliares {
         formularios.get(i - 1).imprimirFormulario();
     }
 
-    private static void edirtarFormularioDaTabela(List<Formulario> formularios,FormularioController formularioController, Scanner scanner) {
+    private static void edirtarFormularioDaTabela(List<Formulario> formularios, FormularioController formularioController, Scanner scanner) {
         int formularioASerEditado = 0;
         do {
             System.out.println("  Qual formulário deseja editar? ");
@@ -434,7 +434,7 @@ public abstract class FuncoesAuxiliares {
     public static List<Formulario> recuperarOsDadosDoBanco(FormularioController formularioController, EnderecoController enderecoController, ContatosController contatosController){
         List<Formulario> formularios = formularioController.listarFormularios();
 
-        for(int i = 0 ; i < formularios.size(); i++){
+        for(int i = 0; i < formularios.size(); i++){
             Formulario formularioParaArrumarOEndereçoEOsContatos = formularios.get(i);
 
             Endereco endereco = enderecoController.listarOEnderecoDeUmFormulario(formularioParaArrumarOEndereçoEOsContatos).get(0);
@@ -443,12 +443,12 @@ public abstract class FuncoesAuxiliares {
             List<Contato> contatos = contatosController.listarContatosDeUmFormulario(formularioParaArrumarOEndereçoEOsContatos);
             formularioParaArrumarOEndereçoEOsContatos.setContatos(contatos);
 
-            formularios.set(i,formularioParaArrumarOEndereçoEOsContatos);
+            formularios.set(i, formularioParaArrumarOEndereçoEOsContatos);
         }
         return formularios;
     }
 
-    public static void mostrarATabela(List<Formulario> formularios,FormularioController formularioController,  Scanner scanner) {
+    public static void mostrarATabela(List<Formulario> formularios, FormularioController formularioController, Scanner scanner) {
         FuncoesAuxiliares.manipularATabela(formularios, formularioController, scanner);
     }
 
