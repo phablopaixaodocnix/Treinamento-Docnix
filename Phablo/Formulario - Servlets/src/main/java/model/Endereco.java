@@ -24,6 +24,19 @@ public class Endereco {
 	public Endereco() {
 	}
 
+	public Endereco(int idEndereco, String cidade, String bairro, String rua, int quadra, int casa, String cep, int lote, int numero,
+					String uf) {
+		this.idEndereco = idEndereco;
+		this.cidade = cidade;
+		this.bairro = bairro;
+		this.rua = rua;
+		this.quadra = quadra;
+		this.casa = casa;
+		this.cep = cep;
+		this.lote = lote;
+		this.numero = numero;
+		this.uf = uf;
+	}
 	public Endereco(String cidade, String bairro, String rua, int quadra, int casa, String cep, int lote, int numero,
 					String uf) {
 		super();

@@ -18,7 +18,7 @@ public class ListarTodosFormulariosServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         FormularioController formularioController = new FormularioController();
-        List<Formulario> formularios = formularioController.listarFormularios();
+        /*List<Formulario> formularios = formularioController.listarFormularios();
         JSONArray jsonArray = new JSONArray();
         for(Formulario formulario : formularios){
             JSONObject jsonObject = new JSONObject(formulario);
@@ -26,7 +26,7 @@ public class ListarTodosFormulariosServlet extends HttpServlet {
         }
 
         resp.setContentType("application/json; charset=UTF-8");
-        resp.getWriter().println(jsonArray);
+        resp.getWriter().println(jsonArray);*/
         resp.getWriter().close();
     }
 }

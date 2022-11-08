@@ -26,6 +26,14 @@ public class Contato {
 		this.email = email;
 	}
 
+	public Contato(int idContato, String nome, String telefone, String email) {
+		super();
+		this.idContato = idContato;
+		this.nome = nome;
+		this.telefone = telefone;
+		this.email = email;
+	}
+
 	public String getNome() {
 		return nome;
 	}

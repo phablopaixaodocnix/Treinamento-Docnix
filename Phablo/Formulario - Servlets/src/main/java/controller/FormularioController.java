@@ -8,9 +8,8 @@ import java.util.List;
 public class FormularioController {
     Dao dao = new Dao();
 
-    public List<Formulario> listarFormularios(){
-        List<Formulario> formularios = this.dao.listarFormularios();
-        return formularios;
+    public void listarFormularios(){
+        this.dao.listarFormularios();
     }
 
     public void cadastrarFormulario(Formulario f){

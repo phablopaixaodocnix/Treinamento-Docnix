@@ -13,7 +13,7 @@ public class Formulario implements AcoesContatos {
   private String nome;
   private String email;
   private String cpf;
-  private  String escolaridade;
+  private String escolaridade;
   private int quantidadeDeContatosNesteFormulario;
   @OneToOne(mappedBy = "formulario",cascade = CascadeType.ALL,orphanRemoval = true)
   private Endereco endereco;
@@ -31,6 +31,26 @@ public class Formulario implements AcoesContatos {
     this.escolaridade = escolaridade;
     this.endereco = endereco;
     this.contatos = contatos;
+    this.quantidadeDeContatosNesteFormulario = contatos.size();
+  }
+  public Formulario(int idFormulario, String nome, String email, String cpf, Endereco endereco, String escolaridade,
+                    List<Contato> contatos) {
+    this.idFormulario = idFormulario;
+    this.nome = nome;
+    this.email = email;
+    this.cpf = cpf;
+    this.escolaridade = escolaridade;
+    this.endereco = endereco;
+    this.contatos = contatos;
+    this.quantidadeDeContatosNesteFormulario = contatos.size();
+  }
+
+  public Formulario(int idFormulario, String nome, String email, String cpf, String escolaridade) {
+    this.idFormulario = idFormulario;
+    this.nome = nome;
+    this.email = email;
+    this.cpf = cpf;
+    this.escolaridade = escolaridade;
     this.quantidadeDeContatosNesteFormulario = contatos.size();
   }
 

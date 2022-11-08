@@ -41,7 +41,7 @@ public class Teste {
         formularioController.cadastrarFormulario(f3);*/
 
         FormularioController formularioController = new FormularioController();
-        List<Formulario> formularios = formularioController.listarFormularios();
+        formularioController.listarFormularios();
 
 
         int i=0;
