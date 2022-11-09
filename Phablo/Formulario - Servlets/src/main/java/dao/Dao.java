@@ -9,6 +9,7 @@ import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
+import org.json.JSONArray;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -63,40 +64,57 @@ public class Dao {
         projectionList.add(Projections.property("contatos.nome").as("nomeContato"));
         projectionList.add(Projections.property("contatos.telefone").as("telefoneContato"));
         projectionList.add(Projections.property("contatos.email").as("emailContato"));
+        projectionList.add(Projections.property("contatos.idFormularioNotFk").as("idFormularioNotFk"));
 
         criteria.setProjection(projectionList);
         criteria.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
         List<HashMap<String, Object>> result = criteria.list();
 
-        List<Formulario> formularios = new ArrayList<Formulario>();
+        List<Formulario> formulariosSemOsContatos = new ArrayList<Formulario>();
+        List<Contato> todosOsContatos = new ArrayList<Contato>();
 
-        for(int i = 0 ; i < result.size(); i++) {
-            if(result.get(i).get("idFormulario") != result.get(i+1).get("idFormulario")) {
-                //extrair este método para uma função própria e consertar a lógica da criação da lista de formulários a partir do hashset
+        List<Integer> idDosFormularios = new ArrayList<Integer>();
+        for(int i = 0; i < result.size();i++){
+            if(i != result.size()-1) {
+                if (i == 0 || result.get(i + 1).get("idFormulario") != result.get(i).get("idFormulario"))
+                    idDosFormularios.add((Integer) result.get(i + 1).get("idFormulario"));
+            }
+        }
+
+        for(int i = 0,k=0 ; i < result.size(); i++) {
+            if((k<idDosFormularios.size()) && ((Integer)result.get(i).get("idFormulario")).equals(idDosFormularios.get(k)) ) {
                 int idFormulario = (Integer) result.get(i).get("idFormulario");
                 String nome = (String) result.get(i).get("nome");
                 String email = (String) result.get(i).get("email");
                 String cpf = (String) result.get(i).get("cpf");
                 String escolaridade = (String) result.get(i).get("escolaridade");
-                Formulario formularioApenasComOsDadosPessoais = new Formulario(idFormulario,nome,email,cpf,escolaridade);
 
                 Endereco endereco = getEnderecoAPartirDaListaRetornadaPeloCriteria(result, i);
 
-                Contato contato = getContatoAPartirDaListaRetornadaPeloCriteria(result, i);
-                List<Contato> contatos = new ArrayList<Contato>();
-                contatos.add(contato);
-
-                Formulario formulario = new Formulario(idFormulario,nome,email,cpf,endereco,escolaridade,contatos);
-                formularios.add(formulario);
+                Formulario formulario = new Formulario(idFormulario,nome,email,cpf,endereco,escolaridade);
+                formulariosSemOsContatos.add(formulario);
+                k++;
             }
-            else {
-                Contato contato = getContatoAPartirDaListaRetornadaPeloCriteria(result, i);
-                formularios.get(formularios.size()-1).getContatos().add(contato);
-            }
+            Contato contato = getContatoAPartirDaListaRetornadaPeloCriteria(result, i);
+            todosOsContatos.add(contato);
         }
 
-
         entityManager.close();
+    }
+
+    public List<Formulario> listarFormulariosImplementacaoTeste(){
+        EntityManager entityManager = jpaUtil.getEntityManeger();
+        String jpql = "SELECT f from Formulario as f";
+        List<Formulario> formularios = entityManager.createQuery(jpql, Formulario.class).getResultList();
+        entityManager.close();
+
+        for (int i = 0 ; i < formularios.size() ; i++){
+            formularios.get(i).getEndereco().setFormulario(null);
+            for(int k = 0 ; k < formularios.get(i).getContatos().size();k++) {
+                formularios.get(i).getContatos().get(k).setFormulario(null);
+            }
+        }
+        return formularios;
     }
 
     public List<Endereco> listarEnderecos() {
@@ -138,7 +156,7 @@ public class Dao {
     public void atualizarFormulario(Formulario f) {//update
         EntityManager entityManager = jpaUtil.getEntityManeger();
         entityManager.getTransaction().begin();
-        entityManager.persist(f);
+        entityManager.merge(f);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
@@ -150,6 +168,7 @@ public class Dao {
         entityManager.remove(formularioASerDeletado);
         entityManager.getTransaction().commit();
     }
+
 
 
     private static Endereco getEnderecoAPartirDaListaRetornadaPeloCriteria(List<HashMap<String, Object>> result, int i) {
@@ -172,7 +191,9 @@ public class Dao {
         String nomeContato = (String) result.get(i).get("nomeContato");
         String telefoneContato = (String) result.get(i).get("telefoneContato");
         String emailContato = (String) result.get(i).get("emailContato");
+        int idFormularioNotFk = (Integer) result.get(i).get("idFormularioNotFk");
         Contato contato = new Contato(idContato, nomeContato, telefoneContato, emailContato);
+        contato.setIdFormularioNotFk(idFormularioNotFk);
         return contato;
     }
 

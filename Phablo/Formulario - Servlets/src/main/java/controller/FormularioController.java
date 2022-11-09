@@ -12,6 +12,10 @@ public class FormularioController {
         this.dao.listarFormularios();
     }
 
+    public List<Formulario> listarFormulariosImplementacaoTeste(){
+        return dao.listarFormulariosImplementacaoTeste();
+    }
+
     public void cadastrarFormulario(Formulario f){
         dao.cadastrarFormulario(f);
     }

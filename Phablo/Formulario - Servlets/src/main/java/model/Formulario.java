@@ -31,7 +31,8 @@ public class Formulario implements AcoesContatos {
     this.escolaridade = escolaridade;
     this.endereco = endereco;
     this.contatos = contatos;
-    this.quantidadeDeContatosNesteFormulario = contatos.size();
+    if(contatos != null)
+      this.quantidadeDeContatosNesteFormulario = contatos.size();
   }
   public Formulario(int idFormulario, String nome, String email, String cpf, Endereco endereco, String escolaridade,
                     List<Contato> contatos) {
@@ -42,16 +43,19 @@ public class Formulario implements AcoesContatos {
     this.escolaridade = escolaridade;
     this.endereco = endereco;
     this.contatos = contatos;
-    this.quantidadeDeContatosNesteFormulario = contatos.size();
+    if(contatos != null)
+      this.quantidadeDeContatosNesteFormulario = contatos.size();
   }
 
-  public Formulario(int idFormulario, String nome, String email, String cpf, String escolaridade) {
+  public Formulario(int idFormulario, String nome, String email, String cpf, Endereco endereco, String escolaridade) {
     this.idFormulario = idFormulario;
     this.nome = nome;
     this.email = email;
     this.cpf = cpf;
     this.escolaridade = escolaridade;
-    this.quantidadeDeContatosNesteFormulario = contatos.size();
+    this.endereco = endereco;
+    if(contatos != null)
+      this.quantidadeDeContatosNesteFormulario = contatos.size();
   }
 
   public String getNome() {

@@ -16,6 +16,8 @@ public class Contato {
 	@JoinColumn(name="idFormulario")
 	private Formulario formulario;
 
+	private int idFormularioNotFk;
+
 	public Contato() {
 	}
 
@@ -64,5 +66,21 @@ public class Contato {
 
 	public void setFormulario(Formulario formulario) {
 		this.formulario = formulario;
+	}
+
+	public int getIdContato() {
+		return idContato;
+	}
+
+	public void setIdContato(int idContato) {
+		this.idContato = idContato;
+	}
+
+	public int getIdFormularioNotFk() {
+		return idFormularioNotFk;
+	}
+
+	public void setIdFormularioNotFk(int idFormularioNotFk) {
+		this.idFormularioNotFk = idFormularioNotFk;
 	}
 }

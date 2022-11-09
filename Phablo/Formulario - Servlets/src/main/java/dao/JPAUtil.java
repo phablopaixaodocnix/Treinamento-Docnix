@@ -9,7 +9,6 @@ public class JPAUtil {
 
     public JPAUtil(){
         this.FACTORY = Persistence.createEntityManagerFactory("FormularioServlet");
-        int i = 0;
     }
 
     public EntityManager getEntityManeger(){
