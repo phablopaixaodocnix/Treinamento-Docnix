@@ -15,7 +15,7 @@ import java.util.List;
 public class ListarTodosContatosServlet extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ContatosController contatosController = new ContatosController();
         List<Contato> contatos = contatosController.listarContatos();
         JSONArray contatosJSON = new JSONArray(contatos);

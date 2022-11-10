@@ -1,24 +1,24 @@
 package testes;
 
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import controller.ContatosController;
+import controller.EnderecoController;
 import controller.FormularioController;
 import dao.Dao;
 import model.Contato;
 import model.Endereco;
 import model.Formulario;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import servlets.Formulario.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Teste {
     public static void main(String[] args) {
+        FormularioController formularioController = new FormularioController();
+        EnderecoController enderecoController = new EnderecoController();
+        ContatosController contatosController = new ContatosController();
         List<Contato> contatoList = new ArrayList<Contato>();
-        contatoList.add(new Contato("contato1phablo","62999035665","contato1@contato1"));
+        /*contatoList.add(new Contato("contato1phablo","62999035665","contato1@contato1"));
         contatoList.add(new Contato("contato2phablo","62999035665","contato2@contato2"));
         Formulario f = new Formulario("phablo","phablo@phablo","70778358127",new Endereco("goiânia","Bairro Phablo","Ciprestes",61,01,"74914180",1,89,"GO"),"ensino superior",contatoList);
         f.getContatos().get(0).setIdFormularioNotFk(f.getIdFormulario());
@@ -45,28 +45,12 @@ public class Teste {
         f3.getEndereco().setFormulario(f3);
         for(int i=0;i<f3.getContatos().size();i++) f3.getContatos().get(i).setFormulario(f3);
 
-        FormularioController formularioController = new FormularioController();
         formularioController.cadastrarFormulario(f);
         formularioController.cadastrarFormulario(f2);
-        formularioController.cadastrarFormulario(f3);
+        formularioController.cadastrarFormulario(f3);*/
 
-        f.getContatos().get(0).setIdFormularioNotFk(f.getIdFormulario());
-        f.getContatos().get(1).setIdFormularioNotFk(f.getIdFormulario());
-        f.getEndereco().setFormulario(f);
+        formularioController.listarFormularios();
 
-        f2.getContatos().get(0).setIdFormularioNotFk(f2.getIdFormulario());
-        f2.getContatos().get(1).setIdFormularioNotFk(f2.getIdFormulario());
-        f2.getEndereco().setFormulario(f2);
-
-        f3.getContatos().get(0).setIdFormularioNotFk(f3.getIdFormulario());
-        f3.getContatos().get(1).setIdFormularioNotFk(f3.getIdFormulario());
-        f3.getEndereco().setFormulario(f3);
-
-        //TERMINAR A IMPLEMENTAÇÃO DE ADICIONAR UMA NOVA COLUNA NA TABELA DE CONTATOS QUE NÃO É CHAVE ESTRANGEIRA
-
-
-        //FormularioController formularioController = new FormularioController();
-        //formularioController.listarFormularios();
 
 
 

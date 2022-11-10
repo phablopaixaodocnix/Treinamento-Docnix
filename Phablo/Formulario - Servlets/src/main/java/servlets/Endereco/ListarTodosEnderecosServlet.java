@@ -15,7 +15,7 @@ import java.util.List;
 public class ListarTodosEnderecosServlet extends HttpServlet {
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         EnderecoController enderecoController = new EnderecoController();
         List<Endereco> enderecos = enderecoController.listarEnderecos();
         JSONArray enderecosJSON = new JSONArray(enderecos);

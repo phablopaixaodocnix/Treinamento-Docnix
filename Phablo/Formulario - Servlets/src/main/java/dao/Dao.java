@@ -6,20 +6,14 @@ import model.Formulario;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.CriteriaSpecification;
-import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
-import org.json.JSONArray;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Dao {
     private JPAUtil jpaUtil;
@@ -32,103 +26,63 @@ public class Dao {
         EntityManager entityManager = jpaUtil.getEntityManeger();
         entityManager.getTransaction().begin();
         entityManager.persist(f); //Assegura que f está no modo maneged
+        consertarColunaIdFormularioNotFkDasTabelas(f);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
 
-    public void listarFormularios(){//Read
+    public List<Formulario> listarFormularios(){//Read
         EntityManager entityManager = jpaUtil.getEntityManeger();
-        Session session = entityManager.unwrap(Session.class);
-        Criteria criteria = session.createCriteria(Formulario.class,"bean");
+        List<HashMap<String, Object>> resultFormulariosSemEnderecoEContatos = getListaDeHashMapsContendoOsFormulariosSemEnderecoEContatosDoBanco(entityManager);
+        List<HashMap<String, Object>> resultEnderecos = getListaDeHashMapsContendoOsEnderecosDoBanco(entityManager);
+        List<HashMap<String, Object>> resultContatos = getListaDeHashMapsContendoOsContatosDoBanco(entityManager);
 
-        criteria.createAlias("bean.endereco","endereco");
-        criteria.createAlias("bean.contatos","contatos");
-
-        ProjectionList projectionList = Projections.projectionList();
-        projectionList.add(Projections.property("bean.idFormulario").as("idFormulario"));
-        projectionList.add(Projections.property("bean.nome").as("nome"));
-        projectionList.add(Projections.property("bean.email").as("email"));
-        projectionList.add(Projections.property("bean.cpf").as("cpf"));
-        projectionList.add(Projections.property("bean.escolaridade").as("escolaridade"));
-        projectionList.add(Projections.property("endereco.idEndereco").as("idEndereco"));
-        projectionList.add(Projections.property("endereco.cidade").as("cidade"));
-        projectionList.add(Projections.property("endereco.bairro").as("bairro"));
-        projectionList.add(Projections.property("endereco.rua").as("rua"));
-        projectionList.add(Projections.property("endereco.quadra").as("quadra"));
-        projectionList.add(Projections.property("endereco.casa").as("casa"));
-        projectionList.add(Projections.property("endereco.cep").as("cep"));
-        projectionList.add(Projections.property("endereco.lote").as("lote"));
-        projectionList.add(Projections.property("endereco.numero").as("numero"));
-        projectionList.add(Projections.property("endereco.uf").as("uf"));
-        projectionList.add(Projections.property("contatos.idContato").as("idContato"));
-        projectionList.add(Projections.property("contatos.nome").as("nomeContato"));
-        projectionList.add(Projections.property("contatos.telefone").as("telefoneContato"));
-        projectionList.add(Projections.property("contatos.email").as("emailContato"));
-        projectionList.add(Projections.property("contatos.idFormularioNotFk").as("idFormularioNotFk"));
-
-        criteria.setProjection(projectionList);
-        criteria.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
-        List<HashMap<String, Object>> result = criteria.list();
-
-        List<Formulario> formulariosSemOsContatos = new ArrayList<Formulario>();
-        List<Contato> todosOsContatos = new ArrayList<Contato>();
-
-        List<Integer> idDosFormularios = new ArrayList<Integer>();
-        for(int i = 0; i < result.size();i++){
-            if(i != result.size()-1) {
-                if (i == 0 || result.get(i + 1).get("idFormulario") != result.get(i).get("idFormulario"))
-                    idDosFormularios.add((Integer) result.get(i + 1).get("idFormulario"));
-            }
+        //criando os formularios(no momento sem endereço e contatos) a partir do resultFormulariosSemEnderecoEContatos
+        List<Formulario> formularios = new ArrayList<Formulario>();
+        for(int i = 0; i < resultFormulariosSemEnderecoEContatos.size();i++){
+            Formulario formulario = getFormularioAPartirDaListaRetornadaPeloCriteria(resultFormulariosSemEnderecoEContatos,i);
+            formularios.add(formulario);
         }
 
-        for(int i = 0,k=0 ; i < result.size(); i++) {
-            if((k<idDosFormularios.size()) && ((Integer)result.get(i).get("idFormulario")).equals(idDosFormularios.get(k)) ) {
-                int idFormulario = (Integer) result.get(i).get("idFormulario");
-                String nome = (String) result.get(i).get("nome");
-                String email = (String) result.get(i).get("email");
-                String cpf = (String) result.get(i).get("cpf");
-                String escolaridade = (String) result.get(i).get("escolaridade");
-
-                Endereco endereco = getEnderecoAPartirDaListaRetornadaPeloCriteria(result, i);
-
-                Formulario formulario = new Formulario(idFormulario,nome,email,cpf,endereco,escolaridade);
-                formulariosSemOsContatos.add(formulario);
-                k++;
+        //adicionando os enderecos e os contatos em cada formulario do arraylist
+        for(int i=0; i<formularios.size();i++){
+            for(int k=0; k<resultContatos.size();k++){
+                if(k<resultEnderecos.size()) {
+                    if (formularios.get(i).getIdFormulario() == (Integer)resultEnderecos.get(k).get("idFormularioNotFk")) {
+                        Endereco endereco = getEnderecoAPartirDaListaRetornadaPeloCriteria(resultEnderecos, k);
+                        formularios.get(i).setEndereco(endereco);
+                    }
+                }
+                if(formularios.get(i).getIdFormulario() == (Integer)resultContatos.get(k).get("idFormularioNotFk")){
+                    Contato contato = getContatoAPartirDaListaRetornadaPeloCriteria(resultContatos,k);
+                    formularios.get(i).getContatos().add(contato);
+                }
             }
-            Contato contato = getContatoAPartirDaListaRetornadaPeloCriteria(result, i);
-            todosOsContatos.add(contato);
         }
-
         entityManager.close();
-    }
-
-    public List<Formulario> listarFormulariosImplementacaoTeste(){
-        EntityManager entityManager = jpaUtil.getEntityManeger();
-        String jpql = "SELECT f from Formulario as f";
-        List<Formulario> formularios = entityManager.createQuery(jpql, Formulario.class).getResultList();
-        entityManager.close();
-
-        for (int i = 0 ; i < formularios.size() ; i++){
-            formularios.get(i).getEndereco().setFormulario(null);
-            for(int k = 0 ; k < formularios.get(i).getContatos().size();k++) {
-                formularios.get(i).getContatos().get(k).setFormulario(null);
-            }
-        }
         return formularios;
     }
 
     public List<Endereco> listarEnderecos() {
         EntityManager entityManager = jpaUtil.getEntityManeger();
-        String jpql = "SELECT e FROM Endereco AS e";
-        List<Endereco> enderecos = entityManager.createQuery(jpql,Endereco.class).getResultList();
+        List<HashMap<String, Object>> result = getListaDeHashMapsContendoOsEnderecosDoBanco(entityManager);
+        List<Endereco> enderecos = new ArrayList<Endereco>();
+        for (int i=0; i<result.size();i++){
+            Endereco endereco = getEnderecoAPartirDaListaRetornadaPeloCriteria(result, i);
+            enderecos.add(endereco);
+        }
         entityManager.close();
         return enderecos;
     }
 
     public List<Contato> listarContatos() {
         EntityManager entityManager = jpaUtil.getEntityManeger();
-        String jpql = "SELECT c FROM Contato AS c";
-        List<Contato> contatos = entityManager.createQuery(jpql,Contato.class).getResultList();
+        List<HashMap<String, Object>> result = getListaDeHashMapsContendoOsContatosDoBanco(entityManager);
+        List<Contato> contatos = new ArrayList<Contato>();
+        for (int i=0; i<result.size();i++){
+            Contato contato = getContatoAPartirDaListaRetornadaPeloCriteria(result, i);
+            contatos.add(contato);
+        }
         entityManager.close();
         return contatos;
     }
@@ -156,7 +110,7 @@ public class Dao {
     public void atualizarFormulario(Formulario f) {//update
         EntityManager entityManager = jpaUtil.getEntityManeger();
         entityManager.getTransaction().begin();
-        entityManager.merge(f);
+        entityManager.persist(f);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
@@ -169,29 +123,111 @@ public class Dao {
         entityManager.getTransaction().commit();
     }
 
+    private void consertarColunaIdFormularioNotFkDasTabelas(Formulario f){
+        f.getEndereco().setIdFormularioNotFk(f.getIdFormulario());
+        for(int i = 0; i < f.getContatos().size();i++){
+            f.getContatos().get(i).setIdFormularioNotFk(f.getIdFormulario());
+        }
+    }
 
 
-    private static Endereco getEnderecoAPartirDaListaRetornadaPeloCriteria(List<HashMap<String, Object>> result, int i) {
-        int idEndereco = (Integer) result.get(i).get("idEndereco");
-        String cidade = (String) result.get(i).get("cidade");
-        String bairro = (String) result.get(i).get("bairro");
-        String rua = (String) result.get(i).get("rua");
-        int quadra = (Integer) result.get(i).get("quadra");
-        int casa = (Integer) result.get(i).get("casa");
-        String cep = (String) result.get(i).get("cep");
-        int lote = (Integer) result.get(i).get("lote");
-        int numero = (Integer) result.get(i).get("numero");
-        String uf = (String) result.get(i).get("uf");
+
+    private List<HashMap<String, Object>> getListaDeHashMapsContendoOsFormulariosSemEnderecoEContatosDoBanco(EntityManager entityManager){
+        Session session = entityManager.unwrap(Session.class);
+        Criteria criteria = session.createCriteria(Formulario.class,"bean");
+        ProjectionList projectionList = Projections.projectionList();
+        projectionList.add(Projections.property("bean.idFormulario").as("idFormulario"));
+        projectionList.add(Projections.property("bean.nome").as("nome"));
+        projectionList.add(Projections.property("bean.email").as("email"));
+        projectionList.add(Projections.property("bean.cpf").as("cpf"));
+        projectionList.add(Projections.property("bean.escolaridade").as("escolaridade"));
+        criteria.setProjection(projectionList);
+        criteria.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
+        List<HashMap<String, Object>> result = criteria.list();
+        return result;
+    }
+
+    public static List<HashMap<String, Object>> getListaDeHashMapsContendoOsEnderecosDoBanco(EntityManager entityManager) {
+        Session session = entityManager.unwrap(Session.class);
+        Criteria criteria = session.createCriteria(Endereco.class,"bean");
+        ProjectionList projectionList = Projections.projectionList();
+        projectionList.add(Projections.property("bean.idEndereco").as("idEndereco"));
+        projectionList.add(Projections.property("bean.cidade").as("cidade"));
+        projectionList.add(Projections.property("bean.bairro").as("bairro"));
+        projectionList.add(Projections.property("bean.rua").as("rua"));
+        projectionList.add(Projections.property("bean.quadra").as("quadra"));
+        projectionList.add(Projections.property("bean.casa").as("casa"));
+        projectionList.add(Projections.property("bean.cep").as("cep"));
+        projectionList.add(Projections.property("bean.lote").as("lote"));
+        projectionList.add(Projections.property("bean.numero").as("numero"));
+        projectionList.add(Projections.property("bean.uf").as("uf"));
+        projectionList.add(Projections.property("bean.idFormularioNotFk").as("idFormularioNotFk"));
+        criteria.setProjection(projectionList);
+        criteria.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
+        List<HashMap<String, Object>> result = criteria.list();
+        return result;
+    }
+
+    private List<HashMap<String, Object>> getListaDeHashMapsContendoOsContatosDoBanco(EntityManager entityManager) {
+        //testar se esta refatoração deu certo e implementar nas outras classes
+        List<String> colunasDaTabelaContatos = new ArrayList<String>();
+        colunasDaTabelaContatos.add("idContato");
+        colunasDaTabelaContatos.add("nome");
+        colunasDaTabelaContatos.add("telefone");
+        colunasDaTabelaContatos.add("email");
+        colunasDaTabelaContatos.add("idFormularioNotFk");
+        Contato contato = new Contato();
+        List<HashMap<String, Object>> result = getListaDeHashMaps(entityManager,colunasDaTabelaContatos,contato);
+        return result;
+    }
+
+    private List<HashMap<String, Object>> getListaDeHashMaps(EntityManager entityManager, List<String> colunasDaTabela, Object classe){
+        Session session = entityManager.unwrap(Session.class);
+        Criteria criteria = session.createCriteria((Class) classe,"bean");
+        ProjectionList projectionList = Projections.projectionList();
+        for (int i=0 ; i< colunasDaTabela.size(); i++){
+            String nomeColuna = colunasDaTabela.get(i);
+            projectionList.add(Projections.property("bean."+nomeColuna).as(nomeColuna));
+        }
+        criteria.setProjection(projectionList);
+        criteria.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
+        List<HashMap<String, Object>> result = criteria.list();
+        return result;
+    }
+
+
+    private static Formulario getFormularioAPartirDaListaRetornadaPeloCriteria(List<HashMap<String, Object>> resultFormulariosSemEnderecoEContatos, int i){
+        int idFormulario = (Integer) resultFormulariosSemEnderecoEContatos.get(i).get("idFormulario");
+        String nome = (String) resultFormulariosSemEnderecoEContatos.get(i).get("nome");
+        String email = (String) resultFormulariosSemEnderecoEContatos.get(i).get("email");
+        String cpf = (String) resultFormulariosSemEnderecoEContatos.get(i).get("cpf");
+        String escolaridade = (String) resultFormulariosSemEnderecoEContatos.get(i).get("escolaridade");
+        Formulario formulario = new Formulario(idFormulario,nome,email,cpf,escolaridade);
+        formulario.setContatos(new ArrayList<Contato>());
+        return formulario;
+    }
+
+    private static Endereco getEnderecoAPartirDaListaRetornadaPeloCriteria(List<HashMap<String, Object>> resultEnderecos, int i) {
+        int idEndereco = (Integer) resultEnderecos.get(i).get("idEndereco");
+        String cidade = (String) resultEnderecos.get(i).get("cidade");
+        String bairro = (String) resultEnderecos.get(i).get("bairro");
+        String rua = (String) resultEnderecos.get(i).get("rua");
+        int quadra = (Integer) resultEnderecos.get(i).get("quadra");
+        int casa = (Integer) resultEnderecos.get(i).get("casa");
+        String cep = (String) resultEnderecos.get(i).get("cep");
+        int lote = (Integer) resultEnderecos.get(i).get("lote");
+        int numero = (Integer) resultEnderecos.get(i).get("numero");
+        String uf = (String) resultEnderecos.get(i).get("uf");
         Endereco endereco = new Endereco(idEndereco, cidade, bairro, rua, quadra, casa, cep, lote, numero, uf);
         return endereco;
     }
 
-    private static Contato getContatoAPartirDaListaRetornadaPeloCriteria(List<HashMap<String, Object>> result, int i) {
-        int idContato = (Integer) result.get(i).get("idContato");
-        String nomeContato = (String) result.get(i).get("nomeContato");
-        String telefoneContato = (String) result.get(i).get("telefoneContato");
-        String emailContato = (String) result.get(i).get("emailContato");
-        int idFormularioNotFk = (Integer) result.get(i).get("idFormularioNotFk");
+    private static Contato getContatoAPartirDaListaRetornadaPeloCriteria(List<HashMap<String, Object>> resultContatos, int i) {
+        int idContato = (Integer) resultContatos.get(i).get("idContato");
+        String nomeContato = (String) resultContatos.get(i).get("nome");
+        String telefoneContato = (String) resultContatos.get(i).get("telefone");
+        String emailContato = (String) resultContatos.get(i).get("email");
+        int idFormularioNotFk = (Integer) resultContatos.get(i).get("idFormularioNotFk");
         Contato contato = new Contato(idContato, nomeContato, telefoneContato, emailContato);
         contato.setIdFormularioNotFk(idFormularioNotFk);
         return contato;

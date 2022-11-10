@@ -21,6 +21,8 @@ public class Endereco {
 	@JoinColumn(name="idFormulario")
 	private Formulario formulario;
 
+	private int idFormularioNotFk;
+
 	public Endereco() {
 	}
 
@@ -129,5 +131,13 @@ public class Endereco {
 
 	public void setFormulario(Formulario formulario) {
 		this.formulario = formulario;
+	}
+
+	public int getIdFormularioNotFk() {
+		return idFormularioNotFk;
+	}
+
+	public void setIdFormularioNotFk(int idFormularioNotFk) {
+		this.idFormularioNotFk = idFormularioNotFk;
 	}
 }
