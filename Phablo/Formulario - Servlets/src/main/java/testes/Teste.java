@@ -49,10 +49,7 @@ public class Teste {
         formularioController.cadastrarFormulario(f2);
         formularioController.cadastrarFormulario(f3);*/
 
-        formularioController.listarFormularios();
-
-
-
+        formularioController.deletarFormulario(38);
 
         int i=0;
     }

@@ -3,7 +3,6 @@ package servlets.Formulario;
 import controller.FormularioController;
 import model.Formulario;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,7 +20,9 @@ public class ListarTodosFormulariosServlet extends HttpServlet {
         List<Formulario> formularios = formularioController.listarFormularios();
         JSONArray jsonArray = new JSONArray(formularios);
         resp.setContentType("application/json; charset=UTF-8");
+        resp.addHeader("Access-Control-Allow-Origin", "*");
         resp.getWriter().println(jsonArray);
         resp.getWriter().close();
     }
+
 }

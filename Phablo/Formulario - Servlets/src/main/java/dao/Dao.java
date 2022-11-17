@@ -10,8 +10,8 @@ import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,8 +25,9 @@ public class Dao {
     public void cadastrarFormulario(Formulario f){//Create
         EntityManager entityManager = jpaUtil.getEntityManeger();
         entityManager.getTransaction().begin();
-        entityManager.persist(f); //Assegura que f está no modo maneged
+        entityManager.persist(f);
         consertarColunaIdFormularioNotFkDasTabelas(f);
+        consertarReferenciaCircularDoFormulario(f);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
@@ -43,7 +44,6 @@ public class Dao {
             Formulario formulario = getFormularioAPartirDaListaRetornadaPeloCriteria(resultFormulariosSemEnderecoEContatos,i);
             formularios.add(formulario);
         }
-
         //adicionando os enderecos e os contatos em cada formulario do arraylist
         for(int i=0; i<formularios.size();i++){
             for(int k=0; k<resultContatos.size();k++){
@@ -87,38 +87,41 @@ public class Dao {
         return contatos;
     }
 
-    public Endereco listarOEnderecoDeUmFormulario(Formulario f){//Read
-        EntityManager entityManager = jpaUtil.getEntityManeger();
-        String jpql = "SELECT e from Endereco as e WHERE idFormulario = :idFormulario";
-        Query q = entityManager.createQuery(jpql);
-        q.setParameter("idFormulario",f.getIdFormulario());
-        Endereco endereco = (Endereco) q.getResultList().get(0);
-        entityManager.close();
-        return endereco;
-    }
-
-    public List<Contato> listarContatosDeUmFormulario(Formulario f){//Read
-        EntityManager entityManager = jpaUtil.getEntityManeger();
-        String jpql = "SELECT c from Contato as c WHERE idFormulario = :idFormulario";
-        Query q = entityManager.createQuery(jpql);
-        q.setParameter("idFormulario",f.getIdFormulario());
-        List<Contato> contatoList = q.getResultList();
-        entityManager.close();
-        return contatoList;
-    }
-
-    public void atualizarFormulario(Formulario f) {//update
+    public void editarFormulario(Formulario f) {//update
         EntityManager entityManager = jpaUtil.getEntityManeger();
         entityManager.getTransaction().begin();
-        entityManager.persist(f);
+        Formulario formularioASerEditado = entityManager.find(Formulario.class, f.getIdFormulario());
+        editarOsDadosDoFormularioASerEditado(f,formularioASerEditado);
+        entityManager.persist(formularioASerEditado);
         entityManager.getTransaction().commit();
         entityManager.close();
     }
 
-    public void deletarFormulario(Formulario formulario){//delete
+    private void editarOsDadosDoFormularioASerEditado(Formulario f,Formulario formularioASerEditado){
+        formularioASerEditado.setNome(f.getNome());
+        formularioASerEditado.setCpf(f.getCpf());
+        formularioASerEditado.setEmail(f.getEmail());
+        formularioASerEditado.setEscolaridade(f.getEscolaridade());
+        formularioASerEditado.getEndereco().setCep(f.getEndereco().getCep());
+        formularioASerEditado.getEndereco().setUf(f.getEndereco().getUf());
+        formularioASerEditado.getEndereco().setCidade(f.getEndereco().getCidade());
+        formularioASerEditado.getEndereco().setBairro(f.getEndereco().getBairro());
+        formularioASerEditado.getEndereco().setQuadra(f.getEndereco().getQuadra());;
+        formularioASerEditado.getEndereco().setLote(f.getEndereco().getLote());
+        formularioASerEditado.getEndereco().setRua(f.getEndereco().getRua());
+        formularioASerEditado.getEndereco().setCasa(f.getEndereco().getCasa());
+        formularioASerEditado.getEndereco().setNumero(f.getEndereco().getNumero());
+        for(int i = 0 ; i < f.getContatos().size();i++){
+            formularioASerEditado.getContatos().get(i).setNome(f.getContatos().get(i).getNome());
+            formularioASerEditado.getContatos().get(i).setEmail(f.getContatos().get(i).getEmail());
+            formularioASerEditado.getContatos().get(i).setTelefone(f.getContatos().get(i).getTelefone());
+        }
+    }
+
+    public void deletarFormulario(int id){//delete
         EntityManager entityManager = jpaUtil.getEntityManeger();
         entityManager.getTransaction().begin();
-        Formulario formularioASerDeletado = entityManager.find(Formulario.class, formulario.getIdFormulario());
+        Formulario formularioASerDeletado = entityManager.find(Formulario.class, id);
         entityManager.remove(formularioASerDeletado);
         entityManager.getTransaction().commit();
     }
@@ -130,60 +133,18 @@ public class Dao {
         }
     }
 
-
-
-    private List<HashMap<String, Object>> getListaDeHashMapsContendoOsFormulariosSemEnderecoEContatosDoBanco(EntityManager entityManager){
-        Session session = entityManager.unwrap(Session.class);
-        Criteria criteria = session.createCriteria(Formulario.class,"bean");
-        ProjectionList projectionList = Projections.projectionList();
-        projectionList.add(Projections.property("bean.idFormulario").as("idFormulario"));
-        projectionList.add(Projections.property("bean.nome").as("nome"));
-        projectionList.add(Projections.property("bean.email").as("email"));
-        projectionList.add(Projections.property("bean.cpf").as("cpf"));
-        projectionList.add(Projections.property("bean.escolaridade").as("escolaridade"));
-        criteria.setProjection(projectionList);
-        criteria.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
-        List<HashMap<String, Object>> result = criteria.list();
-        return result;
+    private void consertarReferenciaCircularDoFormulario(Formulario f) {
+        f.getEndereco().setFormulario(f);
+        for(Contato c : f.getContatos()){
+            c.setFormulario(f);
+        }
     }
 
-    public static List<HashMap<String, Object>> getListaDeHashMapsContendoOsEnderecosDoBanco(EntityManager entityManager) {
-        Session session = entityManager.unwrap(Session.class);
-        Criteria criteria = session.createCriteria(Endereco.class,"bean");
-        ProjectionList projectionList = Projections.projectionList();
-        projectionList.add(Projections.property("bean.idEndereco").as("idEndereco"));
-        projectionList.add(Projections.property("bean.cidade").as("cidade"));
-        projectionList.add(Projections.property("bean.bairro").as("bairro"));
-        projectionList.add(Projections.property("bean.rua").as("rua"));
-        projectionList.add(Projections.property("bean.quadra").as("quadra"));
-        projectionList.add(Projections.property("bean.casa").as("casa"));
-        projectionList.add(Projections.property("bean.cep").as("cep"));
-        projectionList.add(Projections.property("bean.lote").as("lote"));
-        projectionList.add(Projections.property("bean.numero").as("numero"));
-        projectionList.add(Projections.property("bean.uf").as("uf"));
-        projectionList.add(Projections.property("bean.idFormularioNotFk").as("idFormularioNotFk"));
-        criteria.setProjection(projectionList);
-        criteria.setResultTransformer(CriteriaSpecification.ALIAS_TO_ENTITY_MAP);
-        List<HashMap<String, Object>> result = criteria.list();
-        return result;
-    }
 
-    private List<HashMap<String, Object>> getListaDeHashMapsContendoOsContatosDoBanco(EntityManager entityManager) {
-        //testar se esta refatoração deu certo e implementar nas outras classes
-        List<String> colunasDaTabelaContatos = new ArrayList<String>();
-        colunasDaTabelaContatos.add("idContato");
-        colunasDaTabelaContatos.add("nome");
-        colunasDaTabelaContatos.add("telefone");
-        colunasDaTabelaContatos.add("email");
-        colunasDaTabelaContatos.add("idFormularioNotFk");
-        Contato contato = new Contato();
-        List<HashMap<String, Object>> result = getListaDeHashMaps(entityManager,colunasDaTabelaContatos,contato);
-        return result;
-    }
 
-    private List<HashMap<String, Object>> getListaDeHashMaps(EntityManager entityManager, List<String> colunasDaTabela, Object classe){
+    private static List<HashMap<String, Object>> getListaDeHashMaps(EntityManager entityManager, List<String> colunasDaTabela, Object classe){
         Session session = entityManager.unwrap(Session.class);
-        Criteria criteria = session.createCriteria((Class) classe,"bean");
+        Criteria criteria = session.createCriteria(classe.getClass(),"bean");
         ProjectionList projectionList = Projections.projectionList();
         for (int i=0 ; i< colunasDaTabela.size(); i++){
             String nomeColuna = colunasDaTabela.get(i);
@@ -195,6 +156,26 @@ public class Dao {
         return result;
     }
 
+    private List<HashMap<String, Object>> getListaDeHashMapsContendoOsFormulariosSemEnderecoEContatosDoBanco(EntityManager entityManager){
+        List<String> colunasDaTabelaDeFormulariosSemEnderecoEContatos = new ArrayList<String>(Arrays.asList("idFormulario","nome","email","cpf","escolaridade"));
+        Formulario formulario = new Formulario();
+        List<HashMap<String, Object>> result = getListaDeHashMaps(entityManager,colunasDaTabelaDeFormulariosSemEnderecoEContatos,formulario);
+        return result;
+    }
+
+    public static List<HashMap<String, Object>> getListaDeHashMapsContendoOsEnderecosDoBanco(EntityManager entityManager) {
+        List<String> colunasDaTabelaDeEndereco = new ArrayList<String>(Arrays.asList("idEndereco","cidade","bairro","rua","quadra","casa","cep","lote","numero","uf","idFormularioNotFk"));
+        Endereco endereco = new Endereco();
+        List<HashMap<String, Object>> result = getListaDeHashMaps(entityManager,colunasDaTabelaDeEndereco,endereco);
+        return result;
+    }
+
+    private List<HashMap<String, Object>> getListaDeHashMapsContendoOsContatosDoBanco(EntityManager entityManager) {
+        List<String> colunasDaTabelaContatos = new ArrayList<String>(Arrays.asList("idContato", "nome", "telefone", "email", "idFormularioNotFk"));
+        Contato contato = new Contato();
+        List<HashMap<String, Object>> result = getListaDeHashMaps(entityManager,colunasDaTabelaContatos,contato);
+        return result;
+    }
 
     private static Formulario getFormularioAPartirDaListaRetornadaPeloCriteria(List<HashMap<String, Object>> resultFormulariosSemEnderecoEContatos, int i){
         int idFormulario = (Integer) resultFormulariosSemEnderecoEContatos.get(i).get("idFormulario");

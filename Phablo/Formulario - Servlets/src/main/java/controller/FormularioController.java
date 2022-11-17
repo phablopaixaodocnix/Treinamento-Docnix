@@ -16,11 +16,11 @@ public class FormularioController {
         dao.cadastrarFormulario(f);
     }
 
-    public void atualizarFormulario(Formulario f){
-        dao.atualizarFormulario(f);
+    public void editarFormulario(Formulario f){
+        dao.editarFormulario(f);
     }
 
-    public void deletarFormulario(Formulario f){
-        dao.deletarFormulario(f);
+    public void deletarFormulario(int id){
+        dao.deletarFormulario(id);
     }
 }

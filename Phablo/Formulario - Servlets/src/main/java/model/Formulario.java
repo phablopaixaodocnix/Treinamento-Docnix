@@ -34,6 +34,17 @@ public class Formulario implements AcoesContatos {
     if(contatos != null)
       this.quantidadeDeContatosNesteFormulario = contatos.size();
   }
+  public Formulario(String nome, String email, String cpf, String escolaridade) {
+    this.idFormulario = idFormulario;
+    this.nome = nome;
+    this.email = email;
+    this.cpf = cpf;
+    this.escolaridade = escolaridade;
+    this.endereco = endereco;
+    if(contatos != null)
+      this.quantidadeDeContatosNesteFormulario = contatos.size();
+  }
+
   public Formulario(int idFormulario, String nome, String email, String cpf, Endereco endereco, String escolaridade,
                     List<Contato> contatos) {
     this.idFormulario = idFormulario;

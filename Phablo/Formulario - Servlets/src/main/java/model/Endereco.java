@@ -41,7 +41,6 @@ public class Endereco {
 	}
 	public Endereco(String cidade, String bairro, String rua, int quadra, int casa, String cep, int lote, int numero,
 					String uf) {
-		super();
 		this.cidade = cidade;
 		this.bairro = bairro;
 		this.rua = rua;
