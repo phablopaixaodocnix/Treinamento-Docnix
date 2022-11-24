@@ -131,6 +131,10 @@ public class Formulario implements AcoesContatos {
     return this.quantidadeDeContatosNesteFormulario;
   }
 
+  public void setQuantidadeDeContatosNesteFormulario(int quantidadeDeContatosNesteFormulario) {
+    this.quantidadeDeContatosNesteFormulario = quantidadeDeContatosNesteFormulario;
+  }
+
   public int getIdFormulario(){
     return this.idFormulario;
   }

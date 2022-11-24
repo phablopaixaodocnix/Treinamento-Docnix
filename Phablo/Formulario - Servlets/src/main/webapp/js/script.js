@@ -1,7 +1,324 @@
 'use strict';
+const urlBase = "http://localhost:8080/FormularioServlets/";
+const urlEnviarFormulario = urlBase + 'AdicionarFormulario';
+const urlListarFormularios = urlBase + 'ListarTodosFormularios';
+const urlExcluirFormulario = urlBase + 'ExcluirFormulario';
+const urlEditarFormulario = urlBase + 'EditarFormulario';
 
-//FUNÇÕES REULTILIZÁVEIS
+async function enviarFormulario(formulario,url){
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "aplication/json;charset=UTF-8"
+    },
+    body: JSON.stringify(formulario)
+  }
+  await fetch(url,requestOptions);
+}
+
+let idFormularioAserEditado;
+async function editarFormulario(formulario,url){
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "aplication/json;charset=UTF-8"
+    },
+    body: JSON.stringify(formulario)
+  }
+  await fetch(url,requestOptions);
+}
+
+let formularios;
+async function listarTodosFormularios(url) {
+  const requestOptions = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'aplication/json;charset=UTF-8'
+    }
+  };
+
+  let response = await fetch(url, requestOptions);
+  let data = await response.json();
+  return data;
+}
+function construirATabela() {
+  listarTodosFormularios(urlListarFormularios).then(function (result) {
+    formularios = result;
+    criarATabela(formularios);
+  });
+}
+construirATabela();
+
+async function excluirFormulario(id,url){
+  const requestOptions = {
+    method: "POST",
+    body: JSON.stringify(id)
+  }
+  await fetch(url,requestOptions);
+}
+  
+
+
+let quantidadeDeFormulariosNaTabela=0;
+let nomeInput = document.getElementById('nome');
+let emailInput = document.getElementById('e-mail');
+let cpfInput = document.getElementById('cpf');
+let cidadeInput = document.getElementById('cidade');
+let bairroInput = document.getElementById('bairro');
+let ruaInput = document.getElementById('rua');
+let quadraInput = document.getElementById('quadra');
+let casaInput = document.getElementById('casa');
+let cepInput = document.getElementById('cep');
+let loteInput = document.getElementById('lote');
+let numeroInput = document.getElementById('numero');
+let ufSelect = document.getElementById('uf');
+let escolaridadeSelect = document.getElementById('escolaridade');
+let contatoNomeInput = document.getElementById('contato-nome1');
+let contatoTelefoneInput = document.getElementById('contato-telefone1');
+let contatoEmailInput = document.getElementById('contato-email1');
+const submitBtn = document.getElementById('submit');
+let excluirBtns = document.querySelectorAll('.excluir');
+let editarBtns = document.querySelectorAll('.editar');
+let allInputs = document.querySelectorAll('.input');
+let form = document.getElementById('form');
+
+permitir_apenas_numeros_e_backspace_em_um_input(cpfInput);
+permitir_apenas_numeros_e_backspace_em_um_input(quadraInput);
+permitir_apenas_numeros_e_backspace_em_um_input(loteInput);
+permitir_apenas_numeros_e_backspace_em_um_input(casaInput);
+permitir_apenas_numeros_e_backspace_em_um_input(numeroInput);
+permitir_apenas_numeros_e_backspace_em_um_input(contatoTelefoneInput);
+permitir_apenas_numeros_e_backspace_em_um_input(cep);
+let enviarOuEditar = 'enviar';
+
+
+
+//enviar ou editar formulario
 let quantidadeDeContatos = 1;
+form.addEventListener("submit",function(e){
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    let formulario;
+    if (quantidadeDeContatos < 2){
+      alert('Informe pelo ao menos 2 contatos');
+    }
+    else if (cpfIsValid(formData.get('cpf'))){
+
+      async function enviarFormularioParaOBackendEReconstruirATabela(){
+        formulario = getFormularioObjAPartirDoFormData(formData);
+        resetarInputsFormulario(form);
+        if (enviarOuEditar === 'editar'){
+          formulario.idFormulario = idFormularioAserEditado;
+          await editarFormulario(formulario,urlEditarFormulario);
+          enviarOuEditar = 'enviar';
+        } else{
+          await enviarFormulario(formulario,urlEnviarFormulario);
+        }
+        reconstruirTabela();
+      }
+      enviarFormularioParaOBackendEReconstruirATabela();
+
+    }
+});
+function reconstruirTabela(){
+  limparTabela();
+  construirATabela();
+}
+function getFormularioObjAPartirDoFormData(formData){
+  const formulario = {
+    nome: formData.get('nome'),
+    email: formData.get('email'),
+    cpf: formData.get('cpf'),
+    escolaridade: formData.get('escolaridade'),
+    endereco:{
+      cidade: formData.get('cidade'),
+      bairro: formData.get('bairro'),
+      rua: formData.get('rua'),
+      quadra: formData.get('quadra'),
+      lote: formData.get('lote'),
+      casa: formData.get('casa'),
+      numero: formData.get('numero'),
+      cep: formData.get('cep'),
+      uf: formData.get('uf')
+    },
+    contatos:[
+    ]
+  };
+  let k=1;
+  for(;k<=quantidadeDeContatos;k++){
+    const contato = {
+      nome: formData.get(`contato-nome${k}`),
+      telefone: formData.get(`contato-telefone${k}`),
+      email: formData.get(`contato-email${k}`),
+    }
+    formulario.contatos.push(contato);
+  }
+
+  return formulario;
+}
+
+
+//excluindo/editando um formulario
+function adicionarEventListenersNosBotoesDeExcluirEEditar(){
+  excluirBtns[excluirBtns.length-1].addEventListener("click",function(e){
+    async function excluir(){
+      await excluirFormulario(Number(e.target.id),urlExcluirFormulario);
+      reconstruirTabela();
+    }
+    excluir();
+  });
+
+  editarBtns[editarBtns.length-1].addEventListener("click",function(e){
+    copiarOsDadosASeremEditadosParaOsInputs(Number(e.target.id));
+    enviarOuEditar = 'editar';
+  });
+}
+
+function copiarOsDadosASeremEditadosParaOsInputs(idBotao){
+  for(let i = 0 ; i < formularios.length ; i++){
+    if( formularios[i].idFormulario === idBotao ){
+      let formularioASerCopiadoParaOsInputs = formularios[i];
+      nomeInput.value = formularioASerCopiadoParaOsInputs.nome;
+      emailInput.value = formularioASerCopiadoParaOsInputs.email;
+      cpfInput.value= formularioASerCopiadoParaOsInputs.cpf;
+      cidadeInput.value= formularioASerCopiadoParaOsInputs.endereco.cidade;
+      bairroInput.value= formularioASerCopiadoParaOsInputs.endereco.bairro;
+      ruaInput.value= formularioASerCopiadoParaOsInputs.endereco.rua;
+      quadraInput.value= formularioASerCopiadoParaOsInputs.endereco.quadra
+      loteInput.value= formularioASerCopiadoParaOsInputs.endereco.lote
+      casaInput.value= formularioASerCopiadoParaOsInputs.endereco.casa
+      numeroInput.value= formularioASerCopiadoParaOsInputs.endereco.numero
+      cepInput.value= formularioASerCopiadoParaOsInputs.endereco.cep
+
+      for(let k = 1 ; k <= formularioASerCopiadoParaOsInputs.contatos.length ; k++){
+        if(k!=1) adicionarContatoBtn.click()
+        let contatoNome = document.getElementById(`contato-nome${k}`);
+        let contatoTelefone = document.getElementById(`contato-telefone${k}`);
+        let contatoEmail = document.getElementById(`contato-email${k}`);
+        contatoNome.value = formularioASerCopiadoParaOsInputs.contatos[k-1].nome;
+        contatoTelefone.value = formularioASerCopiadoParaOsInputs.contatos[k-1].telefone;
+        contatoEmail.value = formularioASerCopiadoParaOsInputs.contatos[k-1].email;
+      }
+
+      idFormularioAserEditado = formularioASerCopiadoParaOsInputs.idFormulario;
+      break;
+    }
+  }
+}
+
+//Adicionar Contatos
+const adicionarContatoBtn = document.getElementById('adicionar-contato');
+const contato1 = document.getElementById('contato-1');
+
+function criarContato() {
+  quantidadeDeContatos++;
+  let contatoAserAdicionado = document.createElement('div');
+  contatoAserAdicionado.setAttribute('id', `contato-${quantidadeDeContatos}`);
+  const node = `<p id="${quantidadeDeContatos}°contato" class="nth-contato">Contato ${quantidadeDeContatos} </p>
+    <div class="contato-nome-container flexbox">
+      <label for="contato-nome${quantidadeDeContatos}" class="padding-left-1rem">Nome</label>
+      <input type="text" name="contato-nome${quantidadeDeContatos}" id="contato-nome${quantidadeDeContatos}" class="input" />
+      </div>
+    <div class="contato-telefone-container flexbox">
+    <label for="contato-telefone${quantidadeDeContatos}" class="padding-left-1rem"
+        >Telefone + DDD</label
+      >
+      <input
+        type="tel" name="contato-telefone${quantidadeDeContatos}" id="contato-telefone${quantidadeDeContatos}" class="input" maxlength="14"
+      />
+    </div>
+    <div class="contato-email-container flexbox">
+      <label for="contato-email${quantidadeDeContatos}" class="padding-left-1rem"
+        >E-mail</label
+      >
+      <input type="email" name="contato-email${quantidadeDeContatos}" id="contato-email${quantidadeDeContatos}" class="input" />
+    </div>
+    `;
+  contatoAserAdicionado.innerHTML = node;
+
+  return contatoAserAdicionado;
+}
+
+adicionarContatoBtn.addEventListener('click', function () {
+  if (quantidadeDeContatos < 5) {
+    document.getElementById('contatos-serao-inseridos-antes-deste-div').before(criarContato());
+  }
+});
+
+//removerContatos
+const removerContatoBtn = document.getElementById('remover-contato');
+
+function removerContato() {
+  if (quantidadeDeContatos > 1) {
+    const contatoAserRemovido = document.getElementById(`contato-${quantidadeDeContatos}`);
+    contatoAserRemovido.parentNode.removeChild(contatoAserRemovido);
+    quantidadeDeContatos--;
+  }
+}
+
+removerContatoBtn.addEventListener('click', function () {
+  removerContato();
+});
+
+
+
+
+
+
+function limparTabela(){
+  for(let i = quantidadeDeFormulariosNaTabela; i >0; i--){
+    let removerDaTabela = document.querySelectorAll(`.ref${i}`);
+    removerDaTabela[0].remove();
+    removerDaTabela[1].remove();
+    removerDaTabela[2].remove();
+    removerDaTabela[3].remove();
+  }
+  quantidadeDeFormulariosNaTabela=0;
+}
+
+function criarATabela(formularios) {
+  for (let i = 0; i < formularios.length; i++) {
+    let nomeAserAdicionado = document.createElement('div');
+    let emailAserAdicionado = document.createElement('div');
+    let escolaridadeAserAdicionado = document.createElement('div');
+    let botoesAserAdicionado = document.createElement('div');
+
+    nomeAserAdicionado.setAttribute('class', `table-item nome border-right border-top ref${i + 1}`);
+    nomeAserAdicionado.textContent = formularios[i].nome;
+
+    emailAserAdicionado.setAttribute('class', `table-item email border-right border-top ref${i + 1}`);
+    emailAserAdicionado.textContent = formularios[i].email;
+
+    escolaridadeAserAdicionado.setAttribute('class', `table-item escolaridade border-right border-top ref${i + 1}`);
+    escolaridadeAserAdicionado.textContent = formularios[i].escolaridade;
+
+    botoesAserAdicionado.setAttribute('class', `table-item ações border-top ref${i+1}`);
+    botoesAserAdicionado.innerHTML = `
+        <button class="editar ações-btn" id="${formularios[i].idFormulario}">Editar</button>
+        <button class="excluir ações-btn" id="${formularios[i].idFormulario}">Excluir</button>
+    `;
+    let divReferenciaInsercao = document.querySelector('.dados-da-tabela-serao-inseridos-antes-deste-div');
+    divReferenciaInsercao.before(nomeAserAdicionado);
+    divReferenciaInsercao.before(emailAserAdicionado);
+    divReferenciaInsercao.before(escolaridadeAserAdicionado);
+    divReferenciaInsercao.before(botoesAserAdicionado);
+    quantidadeDeFormulariosNaTabela++;
+    excluirBtns = document.querySelectorAll('.excluir');
+    editarBtns = document.querySelectorAll('.editar');
+    adicionarEventListenersNosBotoesDeExcluirEEditar();
+  }
+}
+
+
+
+
+
+
+
+
+
+
 function permitir_apenas_numeros_e_backspace_em_um_input(input) {
   input.addEventListener('keydown', function (e) {
     const condicao =
@@ -18,37 +335,6 @@ function permitir_apenas_numeros_e_backspace_em_um_input(input) {
   });
 }
 
-let nomeInput = document.getElementById('nome');
-let emailInput = document.getElementById('e-mail');
-let cpfInput = document.getElementById('cpf');
-
-let cidadeInput = document.getElementById('cidade');
-let bairroInput = document.getElementById('bairro');
-let ruaInput = document.getElementById('rua');
-let quadraInput = document.getElementById('quadra');
-let casaInput = document.getElementById('casa');
-let cepInput = document.getElementById('cep');
-let loteInput = document.getElementById('lote');
-let numeroInput = document.getElementById('numero');
-let ufSelect = document.getElementById('uf');
-
-let escolaridadeSelect = document.getElementById('escolaridade');
-let contatoNomeInput = document.getElementById('contato-nome1');
-let contatoTelefoneInput = document.getElementById('contato-telefone1');
-let contatoEmailInput = document.getElementById('contato-email1');
-
-let allInputs = document.querySelectorAll('.input');
-let form = document.getElementById('form');
-
-//RESTRIÇÕES DOS CAMPOS QUE PERMITEM APENAS NÚMEROS
-permitir_apenas_numeros_e_backspace_em_um_input(cpfInput);
-permitir_apenas_numeros_e_backspace_em_um_input(quadraInput);
-permitir_apenas_numeros_e_backspace_em_um_input(loteInput);
-permitir_apenas_numeros_e_backspace_em_um_input(casaInput);
-permitir_apenas_numeros_e_backspace_em_um_input(numeroInput);
-permitir_apenas_numeros_e_backspace_em_um_input(contatoTelefoneInput);
-permitir_apenas_numeros_e_backspace_em_um_input(cep);
-
 //mascara cpf
 cpfInput.addEventListener('keypress', () => {
   if (cpfInput.value.length === 3 || cpfInput.value.length === 7) {
@@ -58,7 +344,7 @@ cpfInput.addEventListener('keypress', () => {
     cpfInput.value += '-';
   }
 });
-//verificar se o cpf é valido de acordo com a receita federal
+
 function cpfIsValid(cpf) {
   let cpfApenasNumeros = '';
   if (cpf.length !== 14) {
@@ -100,262 +386,13 @@ function cpfIsValid(cpf) {
   }
 }
 
-//Armazenando os dados do formulário
-const submitBtn = document.querySelector('.submit');
-let dadosDoFormulario;
-
-//criando um objeto com os dados informados
-let dadosDoFormularioObj = []; //vetor onde será armazenado objetos que contém os dados informados no formulário;
-let quantidadeDeFormulariosEnviados = 0;
-let quantidadeDeFormulariosNaTabela = 0;
-let eventListenerExcluir = 0;
-let eventListenerEditar = 0;
-
-submitBtn.addEventListener('click', function (e) {
-  e.preventDefault();
-  let formData = new FormData(form);
-  //if (quantidadeDeContatos < 2) {
-  //  alert('Informe pelo ao menos 2 contatos');
-  /*} else */ if (/*cpfIsValid(formData.get('cpf'))*/ true) {
-
-    //criando objeto com todos os dados informados no formulário
-    dadosDoFormularioObj[quantidadeDeFormulariosEnviados] = {
-      nome: formData.get('nome'),
-      email: formData.get('email'),
-      cpf: formData.get('cpf'),
-      cidade: formData.get('cidade'),
-      bairro: formData.get('bairro'),
-      rua: formData.get('rua'),
-      quadra: formData.get('quadra'),
-      lote: formData.get('lote'),
-      casa: formData.get('casa'),
-      numero: formData.get('numero'),
-      cep: formData.get('cep'),
-      uf: formData.get('uf'),
-      escolaridade: formData.get('escolaridade')
-    };
-    //armazenando os contatos
-    let k = 1;
-    for (; k <= quantidadeDeContatos; k++) {
-      dadosDoFormularioObj[quantidadeDeFormulariosEnviados][`nomeContato${k}`] = formData.get(`contato-nome${k}`);
-      dadosDoFormularioObj[quantidadeDeFormulariosEnviados][`telefoneContato${k}`] = formData.get(
-        `contato-telefone${k}`
-      );
-      dadosDoFormularioObj[quantidadeDeFormulariosEnviados][`emailContato${k}`] = formData.get(`contato-email${k}`);
-    }
-    dadosDoFormularioObj[quantidadeDeFormulariosEnviados].quantidadeDeContatosNesteFormulario = k - 1;
-    quantidadeDeFormulariosEnviados++;
-
-    //resetando o formulário pra que um novo seja preenchido
-    form.reset();
-    if (quantidadeDeContatos > 1) {
-      for (let i = 2; i <= quantidadeDeContatos; i++) {
-        let removerContato = document.getElementById(`contato-${i}`);
-        removerContato.remove();
-      }
-      quantidadeDeContatos = 1;
-    }
-
-    //adicionando alguns dos dados informados na tabela
-    adicionarNaTabela();
-
-    //remover e editar dados da tabela
-    let excluirBtn = document.querySelectorAll('.excluir');
-    let editarBtn = document.querySelectorAll('.editar');
-    let excluirBtnLength = excluirBtn.length;
-    eventListenerEditar++;
-    eventListenerExcluir++;
-
-    const funçãoRemover = function (e) {
-      eventListenerExcluir--;
-      let i = Number(e.target.id);
-      let remover = document.querySelectorAll(`.ref${i}`);
-      remover[0].remove();
-      remover[1].remove();
-      remover[2].remove();
-      remover[3].remove();
-
-      dadosDoFormularioObj.splice(i - 1, 1);
-      quantidadeDeFormulariosNaTabela--;
-      quantidadeDeFormulariosEnviados--;
-
-      let itensTabela = document.querySelectorAll('.table-item');
-      for (let w = i * 4 - 4, k = 1; w < itensTabela.length; w++, k++) {
-        let classes = itensTabela[w].className;
-        let numeroReferencia = classes.match(/(\d+)/)[0];
-        itensTabela[w].classList.remove(`ref${numeroReferencia}`);
-        itensTabela[w].classList.add(`ref${numeroReferencia - 1}`);
-        if (k === 4) {
-          k = 0;
-          itensTabela[w].innerHTML = `
-          <button class="editar ações-btn" id="${numeroReferencia - 1}">Editar</button>
-          <button class="excluir ações-btn" id="${numeroReferencia - 1}">Excluir</button>
-          `;
-        }
-      }
-
-      recolocarEventListeners(i);
-    };
-
-    const funçãoEditar = function (e) {
-      eventListenerEditar--;
-      let i = Number(e.target.id);
-      let remover = document.querySelectorAll(`.ref${i}`);
-      remover[0].remove();
-      remover[1].remove();
-      remover[2].remove();
-      remover[3].remove();
-
-      nomeInput.value = dadosDoFormularioObj[i - 1].nome;
-      emailInput.value = dadosDoFormularioObj[i - 1].email;
-      cpfInput.value = dadosDoFormularioObj[i - 1].cpf;
-      cidadeInput.value = dadosDoFormularioObj[i - 1].cidade;
-      bairroInput.value = dadosDoFormularioObj[i - 1].bairro;
-      ruaInput.value = dadosDoFormularioObj[i - 1].rua;
-      quadraInput.value = dadosDoFormularioObj[i - 1].quadra;
-      loteInput.value = dadosDoFormularioObj[i - 1].lote;
-      casaInput.value = dadosDoFormularioObj[i - 1].casa;
-      numeroInput.value = dadosDoFormularioObj[i - 1].numero;
-      cepInput.value = dadosDoFormularioObj[i - 1].cep;
-      ufSelect.value = dadosDoFormularioObj[i - 1].uf;
-      escolaridadeSelect.value = dadosDoFormularioObj[i - 1].escolaridade;
-      let j = dadosDoFormularioObj[i - 1].quantidadeDeContatosNesteFormulario;
-      for (let k = 1; k < j; k++) {
-        adicionarContatoBtn.click();
-      }
-      for (let p = 1; p <= j; p++) {
-        let contatoNome = document.getElementById(`contato-nome${p}`);
-        let contatoTelefone = document.getElementById(`contato-telefone${p}`);
-        let contatoEmail = document.getElementById(`contato-email${p}`);
-        contatoNome.value = dadosDoFormularioObj[i - 1][`nomeContato${p}`];
-        contatoTelefone.value = dadosDoFormularioObj[i - 1][`telefoneContato${p}`];
-        contatoEmail.value = dadosDoFormularioObj[i - 1][`emailContato${p}`];
-      }
-      console.log(dadosDoFormularioObj);
-      dadosDoFormularioObj.splice(i - 1, 1);
-      console.log(dadosDoFormularioObj);
-      quantidadeDeFormulariosEnviados--;
-      quantidadeDeFormulariosNaTabela--;
-
-      let itensTabela = document.querySelectorAll('.table-item');
-      for (let w = i * 4 - 4, k = 1; w < itensTabela.length; w++, k++) {
-        let classes = itensTabela[w].className;
-        let numeroReferencia = classes.match(/(\d+)/)[0];
-        itensTabela[w].classList.remove(`ref${numeroReferencia}`);
-        itensTabela[w].classList.add(`ref${numeroReferencia - 1}`);
-        if (k === 4) {
-          k = 0;
-          itensTabela[w].innerHTML = `
-          <button class="editar ações-btn" id="${numeroReferencia - 1}">Editar</button>
-          <button class="excluir ações-btn" id="${numeroReferencia - 1}">Excluir</button>
-          `;
-        }
-      }
-
-      recolocarEventListeners(i);
-    };
-
-    function recolocarEventListeners(i) {
-      excluirBtn = document.querySelectorAll('.excluir');
-      editarBtn = document.querySelectorAll('.editar');
-      for (let a = i - 1; a < excluirBtn.length; a++) {
-        excluirBtn[a].addEventListener('click', funçãoRemover);
-        editarBtn[a].addEventListener('click', funçãoEditar);
-      }
-    }
-
-    excluirBtn[excluirBtn.length - 1].addEventListener('click', funçãoRemover);
-    editarBtn[editarBtn.length - 1].addEventListener('click', funçãoEditar);
-  }
-});
-
-//adicionar dados do formulário na tabela
-function adicionarNaTabela() {
-  quantidadeDeFormulariosNaTabela++;
-  let nomeAserAdicionado = document.createElement('div');
-  let emailAserAdicionado = document.createElement('div');
-  let escolaridadeAserAdicionado = document.createElement('div');
-  let botoesAserAdicionado = document.createElement('div');
-
-  nomeAserAdicionado.setAttribute(
-    'class',
-    `table-item nome border-right border-top ref${quantidadeDeFormulariosNaTabela}`
-  );
-  nomeAserAdicionado.textContent = String(dadosDoFormularioObj[quantidadeDeFormulariosEnviados - 1].nome);
-  emailAserAdicionado.setAttribute(
-    'class',
-    `table-item email border-right border-top ref${quantidadeDeFormulariosNaTabela}`
-  );
-  emailAserAdicionado.textContent = String(dadosDoFormularioObj[quantidadeDeFormulariosEnviados - 1].email);
-  escolaridadeAserAdicionado.setAttribute(
-    'class',
-    `table-item escolaridade border-right border-top ref${quantidadeDeFormulariosNaTabela}`
-  );
-  escolaridadeAserAdicionado.textContent = String(
-    dadosDoFormularioObj[quantidadeDeFormulariosEnviados - 1].escolaridade
-  );
-  botoesAserAdicionado.setAttribute('class', `table-item ações border-top ref${quantidadeDeFormulariosNaTabela}`);
-  botoesAserAdicionado.innerHTML = `
-        <button class="editar ações-btn" id="${quantidadeDeFormulariosNaTabela}">Editar</button>
-        <button class="excluir ações-btn" id="${quantidadeDeFormulariosNaTabela}">Excluir</button>
-  `;
-  let divReferenciaInsercao = document.querySelector('.dados-da-tabela-serao-inseridos-antes-deste-div');
-  divReferenciaInsercao.before(nomeAserAdicionado);
-  divReferenciaInsercao.before(emailAserAdicionado);
-  divReferenciaInsercao.before(escolaridadeAserAdicionado);
-  divReferenciaInsercao.before(botoesAserAdicionado);
-}
-
-//Adicionar Contatos
-const adicionarContatoBtn = document.getElementById('adicionar-contato');
-const contato1 = document.getElementById('contato-1');
-
-function criarContato() {
-  quantidadeDeContatos++;
-  let contatoAserAdicionado = document.createElement('div');
-  contatoAserAdicionado.setAttribute('id', `contato-${quantidadeDeContatos}`);
-  const node = `<p id="${quantidadeDeContatos}°contato" class="nth-contato">Contato ${quantidadeDeContatos} </p>
-    <div class="contato-nome-container flexbox">
-      <label for="contato-nome" class="padding-left-1rem">Nome</label>
-      <input type="text" name="contato-nome${quantidadeDeContatos}" id="contato-nome${quantidadeDeContatos}" class="input" />
-      </div>
-    <div class="contato-telefone-container flexbox">
-    <label for="contato-telefone" class="padding-left-1rem"
-        >Telefone + DDD</label
-      >
-      <input
-        type="tel" name="contato-telefone${quantidadeDeContatos}" id="contato-telefone${quantidadeDeContatos}" class="input" maxlength="14"
-      />
-    </div>
-    <div class="contato-email-container flexbox">
-      <label for="contato-email" class="padding-left-1rem"
-        >E-mail</label
-      >
-      <input type="email" name="contato-email${quantidadeDeContatos}" id="contato-email${quantidadeDeContatos}" class="input" />
-    </div>
-    `;
-  contatoAserAdicionado.innerHTML = node;
-
-  return contatoAserAdicionado;
-}
-
-adicionarContatoBtn.addEventListener('click', function () {
-  if (quantidadeDeContatos < 5) {
-    document.getElementById('contatos-serao-inseridos-antes-deste-div').before(criarContato());
-  }
-});
-
-//removerContatos
-const removerContatoBtn = document.getElementById('remover-contato');
-
-function removerContato() {
+function resetarInputsFormulario(form){
+  form.reset();
   if (quantidadeDeContatos > 1) {
-    const contatoAserRemovido = document.getElementById(`contato-${quantidadeDeContatos}`);
-    contatoAserRemovido.parentNode.removeChild(contatoAserRemovido);
-    quantidadeDeContatos--;
+    for (let i = 2; i <= quantidadeDeContatos; i++) {
+      let removerContato = document.getElementById(`contato-${i}`);
+      removerContato.remove();
+    }
+    quantidadeDeContatos = 1;
   }
 }
-
-removerContatoBtn.addEventListener('click', function () {
-  removerContato();
-});

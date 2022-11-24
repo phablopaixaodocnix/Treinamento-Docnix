@@ -92,6 +92,8 @@ public class Dao {
         entityManager.getTransaction().begin();
         Formulario formularioASerEditado = entityManager.find(Formulario.class, f.getIdFormulario());
         editarOsDadosDoFormularioASerEditado(f,formularioASerEditado);
+        consertarColunaIdFormularioNotFkDasTabelas(formularioASerEditado);
+        consertarReferenciaCircularDoFormulario(formularioASerEditado);
         entityManager.persist(formularioASerEditado);
         entityManager.getTransaction().commit();
         entityManager.close();
@@ -111,10 +113,20 @@ public class Dao {
         formularioASerEditado.getEndereco().setRua(f.getEndereco().getRua());
         formularioASerEditado.getEndereco().setCasa(f.getEndereco().getCasa());
         formularioASerEditado.getEndereco().setNumero(f.getEndereco().getNumero());
+
+        if(formularioASerEditado.getContatos().size() > f.getContatos().size())
+            for(int i = formularioASerEditado.getContatos().size() ; i > f.getContatos().size() ; i--)
+                formularioASerEditado.getContatos().remove(i-1);
+
         for(int i = 0 ; i < f.getContatos().size();i++){
-            formularioASerEditado.getContatos().get(i).setNome(f.getContatos().get(i).getNome());
-            formularioASerEditado.getContatos().get(i).setEmail(f.getContatos().get(i).getEmail());
-            formularioASerEditado.getContatos().get(i).setTelefone(f.getContatos().get(i).getTelefone());
+            try {
+                formularioASerEditado.getContatos().get(i).setNome(f.getContatos().get(i).getNome());
+                formularioASerEditado.getContatos().get(i).setEmail(f.getContatos().get(i).getEmail());
+                formularioASerEditado.getContatos().get(i).setTelefone(f.getContatos().get(i).getTelefone());
+            }catch (IndexOutOfBoundsException exception){
+                formularioASerEditado.getContatos().add(new Contato());
+                i--;
+            }
         }
     }
 

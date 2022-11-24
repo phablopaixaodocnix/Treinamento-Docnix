@@ -282,11 +282,13 @@ function adicionarNaTabela() {
     `table-item nome border-right border-top ref${quantidadeDeFormulariosNaTabela}`
   );
   nomeAserAdicionado.textContent = String(dadosDoFormularioObj[quantidadeDeFormulariosEnviados - 1].nome);
+  
   emailAserAdicionado.setAttribute(
     'class',
     `table-item email border-right border-top ref${quantidadeDeFormulariosNaTabela}`
   );
   emailAserAdicionado.textContent = String(dadosDoFormularioObj[quantidadeDeFormulariosEnviados - 1].email);
+  
   escolaridadeAserAdicionado.setAttribute(
     'class',
     `table-item escolaridade border-right border-top ref${quantidadeDeFormulariosNaTabela}`
@@ -294,6 +296,7 @@ function adicionarNaTabela() {
   escolaridadeAserAdicionado.textContent = String(
     dadosDoFormularioObj[quantidadeDeFormulariosEnviados - 1].escolaridade
   );
+  
   botoesAserAdicionado.setAttribute('class', `table-item ações border-top ref${quantidadeDeFormulariosNaTabela}`);
   botoesAserAdicionado.innerHTML = `
         <button class="editar ações-btn" id="${quantidadeDeFormulariosNaTabela}">Editar</button>
