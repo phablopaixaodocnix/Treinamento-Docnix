@@ -8,7 +8,7 @@ import java.util.logging.LogRecord;
 
 @WebFilter(filterName = "corsFilter")
 public class CorsFilter implements Filter {
-    public void init(FilterConfig config) throws ServletException {
+    public void init(FilterConfig config) {
     }
 
     public void destroy() {

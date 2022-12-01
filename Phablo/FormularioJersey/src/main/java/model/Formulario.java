@@ -165,7 +165,7 @@ public class Formulario implements AcoesContatos {
   }
 
 
-  public static Formulario formularioJsonToObject(JSONObject jsonObject){
+  public static Formulario formularioJsonToObject(JSONObject jsonObject, boolean enviar){
     String nome = jsonObject.getString("nome");
     String email = jsonObject.getString("email");
     String cpf = jsonObject.getString("cpf");
@@ -178,8 +178,23 @@ public class Formulario implements AcoesContatos {
       contatos.add( contatoJsonToObject((JSONObject) contatosJson.get(i)) );
     }
 
-    Formulario formulario = new Formulario(nome,email,cpf,endereco,escolaridade,contatos);
+    Formulario formulario = null;
+    if(enviar)
+        formulario = new Formulario(nome,email,cpf,endereco,escolaridade,contatos);
+    else {
+      int idFormulario = jsonObject.getInt("idFormulario");
+      formulario = new Formulario(idFormulario, nome, email, cpf, endereco, escolaridade, contatos);
+    }
     return formulario;
+  }
+
+  public static JSONArray formularioListToJsonArray(List<Formulario> formularios){
+    JSONArray jsonArray = new JSONArray();
+    for(Formulario f: formularios){
+      JSONObject jsonObject = new JSONObject(f);
+      jsonArray.put(jsonObject);
+    }
+    return jsonArray;
   }
 
 }

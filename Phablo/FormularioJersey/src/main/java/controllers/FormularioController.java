@@ -2,46 +2,52 @@ package controllers;
 
 import dao.Dao;
 import model.Formulario;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 import static model.Formulario.formularioJsonToObject;
+import static model.Formulario.formularioListToJsonArray;
 
-@Path("/FormularioJersey")
+@Path("/")
 public class FormularioController {
     Dao dao = new Dao();
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/")
+    public Response listarFormularios(){
+        JSONArray jsonArray = formularioListToJsonArray(this.dao.listarFormularios());
+        Response response = Response.ok().entity(jsonArray.toString()).build();
+        return response;
+    }
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/cadastrarFormulario")
+    @Path("/")
     public void cadastrarFormulario(String request){
         JSONObject jsonObject = new JSONObject(request);
-        Formulario formulario = formularioJsonToObject(jsonObject);
+        Formulario formulario = formularioJsonToObject(jsonObject,true);
         dao.cadastrarFormulario(formulario);
     }
 
-    @GET //teste pra ver se a requisição get está funcionando
+
+    @PUT
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listar(){
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("hello","world");
-        return Response.ok().entity(jsonObject.toString()).build();
+    @Path(("/"))
+    public void editarFormulario(String request){
+        JSONObject jsonObject = new JSONObject(request);
+        Formulario formulario = formularioJsonToObject(jsonObject,false);
+        dao.editarFormulario(formulario);
     }
 
-    public List<Formulario> listarFormularios(){
-        return this.dao.listarFormularios();
-    }
-
-
-    public void editarFormulario(Formulario f){
-        dao.editarFormulario(f);
-    }
-
-    public void deletarFormulario(int id){
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{id}")
+    public void deletarFormulario(@PathParam("id") int id){
         dao.deletarFormulario(id);
     }
 }

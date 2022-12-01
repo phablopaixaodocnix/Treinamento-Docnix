@@ -145,12 +145,20 @@ public class Endereco {
 		String cidade = jsonObject.getString("cidade");
 		String bairro = jsonObject.getString("bairro");
 		String rua = jsonObject.getString("rua");
-		int quadra = jsonObject.getInt("quadra");
-		int casa = jsonObject.getInt("casa");
+		int quadra = converterParaIntegerConsiderandoCasosDeStringNula(jsonObject.getString("quadra"));
+		int casa = converterParaIntegerConsiderandoCasosDeStringNula(jsonObject.getString("casa"));
 		String cep = jsonObject.getString("cep");
-		int lote = jsonObject.getInt("lote");
-		int numero = jsonObject.getInt("numero");
+		int lote = converterParaIntegerConsiderandoCasosDeStringNula(jsonObject.getString("lote"));
+		int numero = converterParaIntegerConsiderandoCasosDeStringNula(jsonObject.getString("numero"));
 		String uf = jsonObject.getString("uf");
 		return new Endereco(cidade,bairro,rua,quadra,casa,cep,lote,numero,uf);
+	}
+
+	private static Integer converterParaIntegerConsiderandoCasosDeStringNula(String str) {
+		try{
+			return Integer.valueOf(str);
+		} catch (NumberFormatException exception){
+			return 0;
+		}
 	}
 }
