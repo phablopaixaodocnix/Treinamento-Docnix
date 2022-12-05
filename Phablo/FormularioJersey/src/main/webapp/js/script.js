@@ -1,5 +1,10 @@
 'use strict';
 const urlBase = "http://localhost:8080/FormularioJersey/rest/";
+const urlEnviarFormulario = urlBase + "enviarFormulario";
+const urlEditarFormulario = urlBase + "editarFormulario";
+const urlListarFormularios = urlBase + "listarFormularios";
+const urlExcluirFormulario = urlBase + "excluirFormulario";
+
 
 async function enviarFormulario(formulario,url){
   const requestOptions = {
@@ -38,7 +43,7 @@ async function listarTodosFormularios(url) {
   return data;
 }
 function construirATabela() {
-  listarTodosFormularios(urlBase).then(function (result) {
+  listarTodosFormularios(urlListarFormularios).then(function (result) {
     formularios = result;
     criarATabela(formularios);
   });
@@ -90,12 +95,13 @@ let enviarOuEditar = 'enviar';
 
 //enviar ou editar formulario
 let quantidadeDeContatos = 1;
+const QUANTIDADE_MINIMA_DE_CONTATOS = 2;
 form.addEventListener("submit",function(e){
     e.preventDefault();
 
     const formData = new FormData(form);
     let formulario;
-    if (quantidadeDeContatos < 2){
+    if (quantidadeDeContatos < QUANTIDADE_MINIMA_DE_CONTATOS){
       alert('Informe pelo ao menos 2 contatos');
     }
     else if (cpfIsValid(formData.get('cpf'))){
@@ -105,10 +111,10 @@ form.addEventListener("submit",function(e){
         resetarInputsFormulario(form);
         if (enviarOuEditar === 'editar'){
           formulario.idFormulario = idFormularioAserEditado;
-          await editarFormulario(formulario,urlBase);
+          await editarFormulario(formulario,urlEditarFormulario);
           enviarOuEditar = 'enviar';
         } else{
-          await enviarFormulario(formulario,urlBase);
+          await enviarFormulario(formulario,urlEnviarFormulario);
         }
         reconstruirTabela();
       }
@@ -158,7 +164,7 @@ function getFormularioObjAPartirDoFormData(formData){
 function adicionarEventListenersNosBotoesDeExcluirEEditar(){
   excluirBtns[excluirBtns.length-1].addEventListener("click",function(e){
     async function excluir(){
-      await excluirFormulario(Number(e.target.id),urlBase);
+      await excluirFormulario(Number(e.target.id),urlExcluirFormulario);
       reconstruirTabela();
     }
     excluir();
@@ -352,28 +358,28 @@ function cpfIsValid(cpf) {
     cpfApenasNumeros = cpfApenasNumeros.replace('-', ' ');
     cpfApenasNumeros = cpfApenasNumeros.replace(/\s/g, '');
 
-    let Soma = 0;
-    let Resto;
+    let soma = 0;
+    let resto;
     if (cpfApenasNumeros == '00000000000') {
       alert('Cpf Inválido');
       return false;
     }
 
-    for (let i = 1; i <= 9; i++) Soma = Soma + parseInt(cpfApenasNumeros.substring(i - 1, i)) * (11 - i);
-    Resto = (Soma * 10) % 11;
+    for (let i = 1; i <= 9; i++) soma = soma + parseInt(cpfApenasNumeros.substring(i - 1, i)) * (11 - i);
+    resto = (soma * 10) % 11;
 
-    if (Resto == 10 || Resto == 11) Resto = 0;
-    if (Resto != parseInt(cpfApenasNumeros.substring(9, 10))) {
+    if (resto == 10 || resto == 11) resto = 0;
+    if (resto != parseInt(cpfApenasNumeros.substring(9, 10))) {
       alert('Cpf Inválido');
       return false;
     }
 
-    Soma = 0;
-    for (let i = 1; i <= 10; i++) Soma = Soma + parseInt(cpfApenasNumeros.substring(i - 1, i)) * (12 - i);
-    Resto = (Soma * 10) % 11;
+    soma = 0;
+    for (let i = 1; i <= 10; i++) soma = soma + parseInt(cpfApenasNumeros.substring(i - 1, i)) * (12 - i);
+    resto = (soma * 10) % 11;
 
-    if (Resto == 10 || Resto == 11) Resto = 0;
-    if (Resto != parseInt(cpfApenasNumeros.substring(10, 11))) {
+    if (resto == 10 || resto == 11) resto = 0;
+    if (resto != parseInt(cpfApenasNumeros.substring(10, 11))) {
       alert('Cpf Inválido');
       return false;
     }

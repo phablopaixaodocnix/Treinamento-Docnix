@@ -18,7 +18,7 @@ public class FormularioController {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/")
+    @Path("listarFormularios")
     public Response listarFormularios(){
         JSONArray jsonArray = formularioListToJsonArray(this.dao.listarFormularios());
         Response response = Response.ok().entity(jsonArray.toString()).build();
@@ -27,7 +27,7 @@ public class FormularioController {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/")
+    @Path("enviarFormulario")
     public void cadastrarFormulario(String request){
         JSONObject jsonObject = new JSONObject(request);
         Formulario formulario = formularioJsonToObject(jsonObject,true);
@@ -37,7 +37,7 @@ public class FormularioController {
 
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
-    @Path(("/"))
+    @Path(("editarFormulario"))
     public void editarFormulario(String request){
         JSONObject jsonObject = new JSONObject(request);
         Formulario formulario = formularioJsonToObject(jsonObject,false);
@@ -46,7 +46,7 @@ public class FormularioController {
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{id}")
+    @Path("excluirFormulario/{id}")
     public void deletarFormulario(@PathParam("id") int id){
         dao.deletarFormulario(id);
     }

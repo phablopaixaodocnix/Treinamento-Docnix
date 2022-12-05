@@ -22,7 +22,7 @@ public class Dao {
         this.jpaUtil = new JPAUtil();
     }
 
-    public void cadastrarFormulario(Formulario f){//Create
+    public void cadastrarFormulario(Formulario f){
         EntityManager entityManager = jpaUtil.getEntityManeger();
         entityManager.getTransaction().begin();
         entityManager.persist(f);
@@ -32,19 +32,18 @@ public class Dao {
         entityManager.close();
     }
 
-    public List<Formulario> listarFormularios(){//Read
+    public List<Formulario> listarFormularios(){
         EntityManager entityManager = jpaUtil.getEntityManeger();
         List<HashMap<String, Object>> resultFormulariosSemEnderecoEContatos = getListaDeHashMapsContendoOsFormulariosSemEnderecoEContatosDoBanco(entityManager);
         List<HashMap<String, Object>> resultEnderecos = getListaDeHashMapsContendoOsEnderecosDoBanco(entityManager);
         List<HashMap<String, Object>> resultContatos = getListaDeHashMapsContendoOsContatosDoBanco(entityManager);
 
-        //criando os formularios(no momento sem endereço e contatos) a partir do resultFormulariosSemEnderecoEContatos
         List<Formulario> formularios = new ArrayList<Formulario>();
         for(int i = 0; i < resultFormulariosSemEnderecoEContatos.size();i++){
             Formulario formulario = getFormularioAPartirDaListaRetornadaPeloCriteria(resultFormulariosSemEnderecoEContatos,i);
             formularios.add(formulario);
         }
-        //adicionando os enderecos e os contatos em cada formulario do arraylist
+
         for(int i=0; i<formularios.size();i++){
             for(int k=0; k<resultContatos.size();k++){
                 if(k<resultEnderecos.size()) {
@@ -64,7 +63,7 @@ public class Dao {
     }
 
 
-    public void editarFormulario(Formulario f) {//update
+    public void editarFormulario(Formulario f) {
         EntityManager entityManager = jpaUtil.getEntityManeger();
         entityManager.getTransaction().begin();
         Formulario formularioASerEditado = entityManager.find(Formulario.class, f.getIdFormulario());
@@ -107,7 +106,7 @@ public class Dao {
         }
     }
 
-    public void deletarFormulario(int id){//delete
+    public void deletarFormulario(int id){
         EntityManager entityManager = jpaUtil.getEntityManeger();
         entityManager.getTransaction().begin();
         Formulario formularioASerDeletado = entityManager.find(Formulario.class, id);

@@ -16,7 +16,6 @@ li {
   border: 1px rgba(0, 0, 0, 0.2) solid;
   border-radius: 0.6rem;
   margin: 0.8rem 0;
-  /* box-shadow: 0.2rem 0.5rem 1rem 1rem rgba(0, 0, 0, 0.17); não ficou bom */
 }
 .nome-li {
   margin-top: 0;
